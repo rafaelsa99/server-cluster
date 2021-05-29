@@ -27,21 +27,200 @@ public class Monitor_GUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabelTitle = new javax.swing.JLabel();
+        jLayeredPaneServerRequests = new javax.swing.JLayeredPane();
+        jPanelBase = new javax.swing.JPanel();
+        jButtonEnd = new javax.swing.JButton();
+        jTabbedPane = new javax.swing.JTabbedPane();
+        jScrollPaneServer = new javax.swing.JScrollPane();
+        jTableServer = new javax.swing.JTable();
+        jScrollPaneLB = new javax.swing.JScrollPane();
+        jTableLB = new javax.swing.JTable();
+        jPanelServer = new javax.swing.JPanel();
+        jButtonBack = new javax.swing.JButton();
+        jLabelTitleServer = new javax.swing.JLabel();
+        jScrollPaneRequests = new javax.swing.JScrollPane();
+        jTableRequests = new javax.swing.JTable();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabelTitle.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabelTitle.setText("Monitor");
+        jLabelTitle.setMaximumSize(new java.awt.Dimension(70, 22));
+
+        jButtonEnd.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jButtonEnd.setText("End");
+        jButtonEnd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEndActionPerformed(evt);
+            }
+        });
+
+        jTableServer.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, "Button"}
+            },
+            new String [] {
+                "Server ID", "State", "Requests"
+            }
+        ));
+        jTableServer.setColumnSelectionAllowed(true);
+        jTableServer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableServerMouseClicked(evt);
+            }
+        });
+        jScrollPaneServer.setViewportView(jTableServer);
+        jTableServer.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+
+        jTabbedPane.addTab("Server", jScrollPaneServer);
+
+        jTableLB.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Request", "Client", "Server", "Nº of Iterations"
+            }
+        ));
+        jScrollPaneLB.setViewportView(jTableLB);
+
+        jTabbedPane.addTab("Load Balancer", jScrollPaneLB);
+
+        javax.swing.GroupLayout jPanelBaseLayout = new javax.swing.GroupLayout(jPanelBase);
+        jPanelBase.setLayout(jPanelBaseLayout);
+        jPanelBaseLayout.setHorizontalGroup(
+            jPanelBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelBaseLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelBaseLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButtonEnd)))
+                .addContainerGap())
+        );
+        jPanelBaseLayout.setVerticalGroup(
+            jPanelBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelBaseLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButtonEnd)
+                .addGap(18, 18, 18)
+                .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                .addGap(8, 8, 8))
+        );
+
+        jButtonBack.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jButtonBack.setText("Back");
+        jButtonBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBackActionPerformed(evt);
+            }
+        });
+
+        jLabelTitleServer.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabelTitleServer.setText("Server Requests");
+        jLabelTitleServer.setMaximumSize(new java.awt.Dimension(150, 17));
+        jLabelTitleServer.setPreferredSize(new java.awt.Dimension(150, 17));
+
+        jTableRequests.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Request", "Client", "State", "Nº of Iterations", "Current Iteration"
+            }
+        ));
+        jScrollPaneRequests.setViewportView(jTableRequests);
+
+        javax.swing.GroupLayout jPanelServerLayout = new javax.swing.GroupLayout(jPanelServer);
+        jPanelServer.setLayout(jPanelServerLayout);
+        jPanelServerLayout.setHorizontalGroup(
+            jPanelServerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelServerLayout.createSequentialGroup()
+                .addGroup(jPanelServerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelServerLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButtonBack)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanelServerLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPaneRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelServerLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabelTitleServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(197, 197, 197))
+        );
+        jPanelServerLayout.setVerticalGroup(
+            jPanelServerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelServerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButtonBack)
+                .addGap(13, 13, 13)
+                .addComponent(jLabelTitleServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPaneRequests, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
+
+        jLayeredPaneServerRequests.setLayer(jPanelBase, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPaneServerRequests.setLayer(jPanelServer, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jLayeredPaneServerRequestsLayout = new javax.swing.GroupLayout(jLayeredPaneServerRequests);
+        jLayeredPaneServerRequests.setLayout(jLayeredPaneServerRequestsLayout);
+        jLayeredPaneServerRequestsLayout.setHorizontalGroup(
+            jLayeredPaneServerRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanelServer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jLayeredPaneServerRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jPanelBase, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jLayeredPaneServerRequestsLayout.setVerticalGroup(
+            jLayeredPaneServerRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPaneServerRequestsLayout.createSequentialGroup()
+                .addGap(0, 43, Short.MAX_VALUE)
+                .addComponent(jPanelServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jLayeredPaneServerRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPaneServerRequestsLayout.createSequentialGroup()
+                    .addGap(0, 47, Short.MAX_VALUE)
+                    .addComponent(jPanelBase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(243, 243, 243)
+                .addComponent(jLabelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(267, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jLayeredPaneServerRequests, javax.swing.GroupLayout.Alignment.TRAILING))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(267, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jLayeredPaneServerRequests, javax.swing.GroupLayout.Alignment.TRAILING))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEndActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonEndActionPerformed
+
+    private void jButtonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonBackActionPerformed
+
+    private void jTableServerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableServerMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableServerMouseClicked
 
     /**
      * @param args the command line arguments
@@ -79,5 +258,19 @@ public class Monitor_GUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonBack;
+    private javax.swing.JButton jButtonEnd;
+    private javax.swing.JLabel jLabelTitle;
+    private javax.swing.JLabel jLabelTitleServer;
+    private javax.swing.JLayeredPane jLayeredPaneServerRequests;
+    private javax.swing.JPanel jPanelBase;
+    private javax.swing.JPanel jPanelServer;
+    private javax.swing.JScrollPane jScrollPaneLB;
+    private javax.swing.JScrollPane jScrollPaneRequests;
+    private javax.swing.JScrollPane jScrollPaneServer;
+    private javax.swing.JTabbedPane jTabbedPane;
+    private javax.swing.JTable jTableLB;
+    private javax.swing.JTable jTableRequests;
+    private javax.swing.JTable jTableServer;
     // End of variables declaration//GEN-END:variables
 }
