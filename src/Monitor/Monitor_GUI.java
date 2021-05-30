@@ -5,6 +5,8 @@
  */
 package Monitor;
 
+import javax.swing.JPanel;
+
 /**
  *
  * @author omp
@@ -222,6 +224,12 @@ public class Monitor_GUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTableServerMouseClicked
 
+    private void switchPanels(JPanel panel){
+        jLayeredPaneServerRequests.removeAll();
+        jLayeredPaneServerRequests.add(panel);
+        jLayeredPaneServerRequests.repaint();
+        jLayeredPaneServerRequests.revalidate();
+    }
     /**
      * @param args the command line arguments
      */
