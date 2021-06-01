@@ -5,8 +5,7 @@
  */
 package LoadBalancer;
 
-import Request.Request;
-import Response.Response;
+import Communication.Message;
 
 /**
  *
@@ -14,9 +13,9 @@ import Response.Response;
  */
 interface I_LoadBalancer {
     
-   public void requestDispatcher(Request request);
+   public void requestDispatcher(Message request);
    
-   public void responseDispatcher(Response response);
+   public void responseDispatcher(Message response);
    
    public void processMessage();
 }

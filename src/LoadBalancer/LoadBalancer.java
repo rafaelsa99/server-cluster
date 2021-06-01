@@ -5,8 +5,7 @@
  */
 package LoadBalancer;
 
-import Request.Request;
-import Response.Response;
+import Communication.Message;
 
 /**
  *
@@ -38,12 +37,12 @@ public class LoadBalancer implements I_LoadBalancer{
     
         
     @Override
-    public void requestDispatcher(Request request) {
+    public void requestDispatcher(Message request) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void responseDispatcher(Response response) {
+    public void responseDispatcher(Message response) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
