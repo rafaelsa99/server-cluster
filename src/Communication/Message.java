@@ -162,8 +162,21 @@ public class Message implements Serializable{
         this.iterations = 0;
         this.valueNa = 0;
     }
-    
-    
+
+    /**
+     * Constructor for a empty message.
+     * @param messageCode message code
+     */
+    public Message(int messageCode) {
+        this.messageCode = messageCode;
+        this.hostname = "";
+        this.port = 0;
+        this.clientId = 0;
+        this.serverId = 0;
+        this.requestId = 0;
+        this.iterations = 0;
+        this.valueNa = 0;
+    }
     
     public int getClientId() {
         return clientId;

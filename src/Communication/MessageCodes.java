@@ -6,6 +6,7 @@ package Communication;
  * @author Rafael Sá (104552), José Brás (74029)
  */
 public class MessageCodes {
+    
     /**
      * Request code for NA calculation.
      */
@@ -42,6 +43,10 @@ public class MessageCodes {
      * Code for assigning a server to a request.
      */
     public static final int ASSIGNMENT = 9;
+    /**
+     * Code for a empty reply message.
+     */
+    public static final int EMPTY_REPLY = 10;
     
     /**
      * It can not be instantiated.
