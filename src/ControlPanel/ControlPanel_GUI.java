@@ -1,23 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package ControlPanel;
 
-import javax.swing.JLabel;
+import java.util.concurrent.locks.ReentrantLock;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author omp
+ * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */
 public class ControlPanel_GUI extends javax.swing.JFrame {
 
+    private ReentrantLock rl;
+    private final Control control;
+    
     /**
      * Creates new form ControlPanel_GUI
      */
     public ControlPanel_GUI() {
         initComponents();
+        control = new Control();
+        rl = new ReentrantLock();
     }
 
     /**
@@ -43,6 +45,11 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jButtonEnd.setText("End");
+        jButtonEnd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEndActionPerformed(evt);
+            }
+        });
 
         jToggleButtonStartLoadBalancer.setText("Start Load Balancer");
         jToggleButtonStartLoadBalancer.addActionListener(new java.awt.event.ActionListener() {
@@ -81,10 +88,6 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
             }
         ));
         jScrollPaneServers.setViewportView(jTableServers);
-        if (jTableServers.getColumnModel().getColumnCount() > 0) {
-            jTableServers.getColumnModel().getColumn(0).setCellRenderer(null);
-            jTableServers.getColumnModel().getColumn(1).setCellRenderer(null);
-        }
 
         jTabbedPane.addTab("Servers", jScrollPaneServers);
 
@@ -142,20 +145,61 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jToggleButtonStartLoadBalancerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonStartLoadBalancerActionPerformed
-        // TODO add your handling code here:
+        rl.lock();
+        try{
+            if(jToggleButtonStartLoadBalancer.isSelected()){
+                jToggleButtonStartLoadBalancer.setText("End Load Balancer");
+                control.startLoadBalancer();
+            } else {
+                jToggleButtonStartLoadBalancer.setText("Start Load Balancer");
+                control.endLoadBalancer();
+            }
+        } finally {
+            rl.unlock();
+        }
     }//GEN-LAST:event_jToggleButtonStartLoadBalancerActionPerformed
 
     private void jToggleButtonStartMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonStartMonitorActionPerformed
-        // TODO add your handling code here:
+        rl.lock();
+        try{
+            if(jToggleButtonStartMonitor.isSelected()){
+                jToggleButtonStartMonitor.setText("End Monitor");
+                control.startMonitor();
+            } else {
+                jToggleButtonStartMonitor.setText("Start Monitor");
+                control.endMonitor();
+            }
+        } finally {
+            rl.unlock();
+        }
     }//GEN-LAST:event_jToggleButtonStartMonitorActionPerformed
 
     private void jButtonNewServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewServerActionPerformed
-        // TODO add your handling code here:
+        rl.lock();
+        try{
+            int serverId = control.startServer();
+            DefaultTableModel model = (DefaultTableModel) jTableServers.getModel();
+            model.addRow(new Object[]{serverId, "Shutdown"});
+        } finally {
+            rl.unlock();
+        }
+        
     }//GEN-LAST:event_jButtonNewServerActionPerformed
 
     private void jButtonNewClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewClientActionPerformed
-        // TODO add your handling code here:
+        rl.lock();
+        try{
+            int clientId = control.startClient();
+            DefaultTableModel model = (DefaultTableModel) jTableClients.getModel();
+            model.addRow(new Object[]{clientId, "Shutdown"});
+        } finally {
+            rl.unlock();
+        }
     }//GEN-LAST:event_jButtonNewClientActionPerformed
+
+    private void jButtonEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEndActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jButtonEndActionPerformed
 
     /**
      * @param args the command line arguments
@@ -185,10 +229,8 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ControlPanel_GUI().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new ControlPanel_GUI().setVisible(true);
         });
     }
 

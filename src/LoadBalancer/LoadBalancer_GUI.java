@@ -5,6 +5,8 @@
  */
 package LoadBalancer;
 
+import Configurations.LBConfiguration;
+
 /**
  *
  * @author omp
@@ -71,10 +73,9 @@ public class LoadBalancer_GUI extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LoadBalancer_GUI().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new LoadBalancer_GUI().setVisible(false);
+            new LBConfiguration().setVisible(true);
         });
     }
 
