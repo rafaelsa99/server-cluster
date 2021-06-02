@@ -37,7 +37,7 @@ public class CServer extends Thread{
      * Await new client.
      * @return socket return from the client accept
      */
-    public Socket awaitMessage(){
+    public Socket awaitClient(){
         Socket socket = null;
         try { 
             socket = serverSocket.accept();

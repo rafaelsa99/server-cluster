@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 /**
  * Communication client.
@@ -16,7 +15,13 @@ public class CClient {
     private final String hostName;
     /** Port of the server. */
     private final int portNumber;
-
+    /** Socket connected to the server. */
+    private Socket socket;
+    /** Output stream of the communication channel. */
+    private ObjectOutputStream out;
+    /** Input stream of the communication channel. */
+    private ObjectInputStream in;
+    
     /**
      * CClient instantiation.
      * @param hostName Host name of the server
@@ -28,17 +33,28 @@ public class CClient {
     }
     
     /**
-     * Connect to the server to test the connection.
-     * @return true if the connection succeeded. false otherwise.
+     * Connect to the server and initialize the communication channels.
      */
-    public boolean openServer() {
+    public void connectToServer() {
         try {
-            Socket echoSocket = new Socket(this.hostName, this.portNumber);
-            echoSocket.close();
-            return true;
+            socket = new Socket(hostName, portNumber);
+            out = new ObjectOutputStream (socket.getOutputStream ());
+            in = new ObjectInputStream (socket.getInputStream ());
         } catch(IOException e){
             System.out.println("Couldn't get I/O for the connection to " + hostName);
-            return false;
+        }
+    }
+    
+    /**
+     * Close the connection to the server.
+     */
+    public void closeConnection(){
+        if(socket.isConnected()){
+            try {
+                socket.close();
+            } catch (IOException ex) {
+                System.out.println(ex.toString());
+            }
         }
     }
     
@@ -49,21 +65,15 @@ public class CClient {
      * @return reply message received
      */
     public Message sendMessageAndWaitForReply(Object obj){
-       try (
-            Socket kkSocket = new Socket(hostName, portNumber);
-            ObjectOutputStream out = new ObjectOutputStream (kkSocket.getOutputStream ());
-            ObjectInputStream in = new ObjectInputStream (kkSocket.getInputStream ());
-        ) {
-           out.writeObject(obj);
-           Message reply = (Message)in.readObject();
-           return reply;
-        } catch (UnknownHostException e) {
-            System.out.println("Don't know about host " + hostName);
+        Message reply = null;
+        try{
+            out.writeObject(obj);
+            reply = (Message)in.readObject();
         } catch (IOException e) {
             System.out.println("Couldn't get I/O for the connection to " + hostName);
         } catch (ClassNotFoundException ex) {
             System.out.println(ex.toString());
         }
-        return null;
+        return reply;
     }
 }

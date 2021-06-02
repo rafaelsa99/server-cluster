@@ -55,12 +55,15 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
     public void run() {
         Socket socket;
         cServer.openServer();
-        while((socket = cServer.awaitMessage()) != null)
+        while((socket = cServer.awaitClient()) != null)
             new ProcessingThread(socket).start();
     }
 
     @Override
     public void newRequest(Message request) {
+        //CClient cClient = new CClient(hostnameServer, portServer);
+        //Message reply = cClient.sendMessageAndWaitForReply(request);
+        //return reply;
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
