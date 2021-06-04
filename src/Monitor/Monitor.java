@@ -49,7 +49,7 @@ public class Monitor implements I_Monitor{
     }
 
     @Override
-    public void checkFreeServer() {
+    public void viewServersState() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

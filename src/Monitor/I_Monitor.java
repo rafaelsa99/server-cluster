@@ -17,5 +17,7 @@ public interface I_Monitor {
     
     public void processMessage();
     
-    public void checkFreeServer();
+    public void viewServersState();
+      
+    
 }

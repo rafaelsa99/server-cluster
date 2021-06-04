@@ -5,7 +5,14 @@
  */
 package Monitor;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  *
@@ -223,7 +230,84 @@ public class Monitor_GUI extends javax.swing.JFrame {
     private void jTableServerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableServerMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_jTableServerMouseClicked
+    
+    private void jTableStateMouseClicked(Object obj) {                                          
+        // TODO add your handling code here:
+    }     
+    
+            /**
+    * Custom List Item Renderer
+    */
+    class TableButtonRenderer extends DefaultTableCellRenderer {
+        private static final long serialVersionUID = -7799441088157759804L;
+        //private JPanel panel;
+        private JButton button;
+        private Color textSelectionColor = Color.BLACK;
+        private Color backgroundSelectionColor = Color.CYAN;
+        private Color textNonSelectionColor = Color.BLACK;
+        private Color backgroundNonSelectionColor = Color.WHITE;
 
+        TableButtonRenderer() {
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(
+                JTable table, 
+                Object value,
+                boolean isSelected,
+                boolean hasFocus,
+                int row,
+                int col) {
+
+            //panel = new JPanel(new FlowLayout(FlowLayout.CENTER,0,3));
+            
+            button = new JButton();
+            //button.setOpaque(true);
+            //JLabel input = (JLabel)value;
+            button.setText("State of Requests");
+                        
+            //panel.add(button);
+            //label.setHorizontalAlignment(JLabel.CENTER);
+            //label.setIcon(input.getIcon());
+            //label.setText(input.getText());
+            //label.setToolTipText(input.getToolTipText());
+
+            if (isSelected) {
+                //panel.setBackground(backgroundSelectionColor);
+                //panel.setForeground(textSelectionColor);
+                //panel.setBackground(backgroundSelectionColor);
+            } else {
+                //panel.setBackground(backgroundNonSelectionColor);
+                //panel.setForeground(textNonSelectionColor);
+            }
+            //value = button;          
+            return button;
+        }
+        
+    }
+    
+    public class JTableButtonMouseListener extends MouseAdapter {
+      private final JTable table;
+
+      public JTableButtonMouseListener(JTable table) {
+        this.table = table;
+      }
+
+      @Override public void mouseClicked(MouseEvent e) {
+        int column = table.getColumnModel().getColumnIndexAtX(e.getX());
+        int row    = e.getY()/table.getRowHeight(); 
+        //System.out.println("Col :"+column + "row:"+row);
+
+        if (row < table.getRowCount() && row >= 0 && column < table.getColumnCount() && column >= 0) {
+          Object value = table.getValueAt(row, column);
+          //System.out.println("Value :" + value.getClass().getName());
+          jTableStateMouseClicked((Integer)value);
+        }
+      }
+    }
+    
+    
+    
     private void switchPanels(JPanel panel){
         jLayeredPaneServerRequests.removeAll();
         jLayeredPaneServerRequests.add(panel);

@@ -1,8 +1,27 @@
 
 package ControlPanel;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;
+import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -12,6 +31,8 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
 
     private ReentrantLock rl;
     private final Control control;
+    private HashMap<Integer, Integer> assTableServerID = new HashMap<Integer, Integer>();
+    private HashMap<Integer, Integer> assTableClientID = new HashMap<Integer, Integer>();
     
     /**
      * Creates new form ControlPanel_GUI
@@ -87,7 +108,15 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
                 "Server ID", "Shutdown"
             }
         ));
+        jTableServers.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jTableServers.setEnabled(false);
+        jTableServers.setName("Servers");
+        jTableServers.setRowHeight(35);
+        jTableServers.addMouseListener(new JTableButtonMouseListener(jTableServers));
         jScrollPaneServers.setViewportView(jTableServers);
+        if (jTableServers.getColumnModel().getColumnCount() > 0) {
+            jTableServers.getColumnModel().getColumn(1).setCellRenderer(new TableButtonRenderer());
+        }
 
         jTabbedPane.addTab("Servers", jScrollPaneServers);
 
@@ -99,7 +128,15 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
                 "Client ID", "Shutdown"
             }
         ));
+        jTableClients.setEnabled(false);
+        jTableClients.setFocusable(false);
+        jTableClients.setName("Clients");
+        jTableClients.setRowHeight(35);
+        jTableClients.addMouseListener(new JTableButtonMouseListener(jTableClients));
         jScrollPaneClients.setViewportView(jTableClients);
+        if (jTableClients.getColumnModel().getColumnCount() > 0) {
+            jTableClients.getColumnModel().getColumn(1).setCellRenderer(new TableButtonRenderer());
+        }
 
         jTabbedPane.addTab("Clients", jScrollPaneClients);
 
@@ -178,8 +215,7 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
         rl.lock();
         try{
             int serverId = control.startServer();
-            DefaultTableModel model = (DefaultTableModel) jTableServers.getModel();
-            model.addRow(new Object[]{serverId, "Shutdown"});
+            addElemToServerTable(serverId);
         } finally {
             rl.unlock();
         }
@@ -190,8 +226,7 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
         rl.lock();
         try{
             int clientId = control.startClient();
-            DefaultTableModel model = (DefaultTableModel) jTableClients.getModel();
-            model.addRow(new Object[]{clientId, "Shutdown"});
+            addElemToClientTable(clientId);
         } finally {
             rl.unlock();
         }
@@ -199,8 +234,128 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
 
     private void jButtonEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEndActionPerformed
         System.exit(0);
+        //addElemToTable(5);
+        //addElemToTable(10);
     }//GEN-LAST:event_jButtonEndActionPerformed
+    
+    
+    private void addElemToServerTable(Integer serverId){
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableServers.getModel();
+        model.addRow(new Object[]{"Server " + serverId, serverId});
+        assTableServerID.put(serverId, model.getRowCount() - 1);
+    }
+    
+    private void removeElemFromServerTable(Integer serverId){
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableServers.getModel();
+        model.removeRow(assTableServerID.get(serverId));
+        assTableServerID.remove(serverId);
+    }
+    
+        private void addElemToClientTable(Integer clientId){
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableClients.getModel();
+        model.addRow(new Object[]{"Client " + clientId, clientId});
+        assTableClientID.put(clientId, model.getRowCount() - 1);
+    }
+    
+    private void removeElemFromClientTable(Integer clientId){
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableClients.getModel();
+        model.removeRow(assTableClientID.get(clientId));
+        assTableClientID.remove(clientId);
+    }
+        
+    private void jButtonShutdownServerActionPerformed(Integer object) {                                           
+        //System.exit(0);
+        System.out.println("Clicked !" + object);
+        //Send Message To shutdownServer
+        removeElemFromServerTable(object);
+    }
+    
+    private void jButtonShutdownClientActionPerformed(Integer object) {                                           
+        //System.exit(0);
+        System.out.println("Clicked !" + object);
+        //Send Message To shutdownServer
+        removeElemFromClientTable(object);
+    } 
+        /**
+    * Custom List Item Renderer
+    */
+    class TableButtonRenderer extends DefaultTableCellRenderer {
+        private static final long serialVersionUID = -7799441088157759804L;
+        //private JPanel panel;
+        private JButton button;
+        private Color textSelectionColor = Color.BLACK;
+        private Color backgroundSelectionColor = Color.CYAN;
+        private Color textNonSelectionColor = Color.BLACK;
+        private Color backgroundNonSelectionColor = Color.WHITE;
 
+        TableButtonRenderer() {
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(
+                JTable table, 
+                Object value,
+                boolean isSelected,
+                boolean hasFocus,
+                int row,
+                int col) {
+
+            //panel = new JPanel(new FlowLayout(FlowLayout.CENTER,0,3));
+            
+            button = new JButton();
+            //button.setOpaque(true);
+            //JLabel input = (JLabel)value;
+            button.setText("Shutdown");
+                        
+            //panel.add(button);
+            //label.setHorizontalAlignment(JLabel.CENTER);
+            //label.setIcon(input.getIcon());
+            //label.setText(input.getText());
+            //label.setToolTipText(input.getToolTipText());
+
+            if (isSelected) {
+                //panel.setBackground(backgroundSelectionColor);
+                //panel.setForeground(textSelectionColor);
+                //panel.setBackground(backgroundSelectionColor);
+            } else {
+                //panel.setBackground(backgroundNonSelectionColor);
+                //panel.setForeground(textNonSelectionColor);
+            }
+            //value = button;          
+            return button;
+        }
+        
+    }
+    
+    public class JTableButtonMouseListener extends MouseAdapter {
+      private final JTable table;
+
+      public JTableButtonMouseListener(JTable table) {
+        this.table = table;
+      }
+
+      @Override public void mouseClicked(MouseEvent e) {
+        int column = table.getColumnModel().getColumnIndexAtX(e.getX());
+        int row    = e.getY()/table.getRowHeight(); 
+        //System.out.println("Col :"+column + "row:"+row);
+
+        if (row < table.getRowCount() && row >= 0 && column < table.getColumnCount() && column >= 0) {
+          Object value = table.getValueAt(row, column);
+            if(table.getName().equals("Servers"))
+            {
+                jButtonShutdownServerActionPerformed((Integer)value);
+            }else{
+                jButtonShutdownClientActionPerformed((Integer)value);
+            }
+        }
+      }
+    }
+    
+    
     /**
      * @param args the command line arguments
      */
