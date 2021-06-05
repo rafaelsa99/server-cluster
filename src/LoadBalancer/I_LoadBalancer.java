@@ -2,6 +2,8 @@
 package LoadBalancer;
 
 import Communication.Message;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -10,6 +12,9 @@ import Communication.Message;
 interface I_LoadBalancer {
     
    public void newRequest(Message request);
-   
-   public void serverDown(Message message);
+   public void requestReply(Message reply);
+   public void serverDown(int serverId, List<Message> messages);
+   public void newServer(int serverId, String hostname, int port);
+   public void monitorUp(String hostname, int port);
+   public void serversInfo(HashMap<Integer, Integer> serversOccupation);
 }

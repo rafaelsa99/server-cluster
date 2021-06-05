@@ -5,14 +5,19 @@
         <group>
             <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/Configurations/LBConfiguration.java</file>
             <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/Communication/MessageCodes.java</file>
-            <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/LoadBalancer/I_LoadBalancer.java</file>
+            <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/Monitor/Monitor.java</file>
             <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/LoadBalancer/LoadBalancer_GUI.java</file>
-            <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/LoadBalancer/LoadBalancer.java</file>
-            <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/Communication/CServer.java</file>
-            <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/ControlPanel/Control.java</file>
             <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/Communication/Message.java</file>
             <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/ControlPanel/ControlPanel_GUI.java</file>
             <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/Communication/CClient.java</file>
+            <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/Server/Server.java</file>
+            <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/Client/Client.java</file>
+            <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/LoadBalancer/I_LoadBalancer.java</file>
+            <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/Monitor/I_Monitor.java</file>
+            <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/LoadBalancer/LoadBalancer.java</file>
+            <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/Communication/CServer.java</file>
+            <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/ControlPanel/Control.java</file>
+            <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/Server/Server_GUI.java</file>
         </group>
     </open-files>
 </project-private>

@@ -5,6 +5,7 @@
  */
 package Monitor;
 
+import Communication.Message;
 import Server.Server;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,25 +33,29 @@ public class Monitor implements I_Monitor{
     public ArrayList<Integer> getActiveServers() {
         return activeServers;
     }
-   
-    @Override
-    public void serverStateDown(Integer serverId) {
-        activeServers.remove(serverId);
-    }
 
     @Override
-    public void serverStateUp(Integer serverId) {
-        activeServers.add(serverId);
-    }
-
-    @Override
-    public void processMessage() {
+    public void loadBalancerUp(String hostname, int port) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void checkFreeServer() {
+    public void serverHeartbeat(int serverId) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
+    @Override
+    public void newLBRequest(Message request) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void newLBReply(Message reply) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void serverIterationsUpdate(int serverId, int requestId, int currentIter) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

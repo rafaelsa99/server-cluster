@@ -1,9 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Monitor;
+
+import Communication.Message;
 
 /**
  *
@@ -11,11 +9,9 @@ package Monitor;
  */
 public interface I_Monitor {
        
-    public void serverStateDown(Integer serverId);
-    
-    public void serverStateUp(Integer serverId);
-    
-    public void processMessage();
-    
-    public void checkFreeServer();
+    public void loadBalancerUp(String hostname, int port);
+    public void serverHeartbeat(int serverId);
+    public void newLBRequest(Message request);
+    public void newLBReply(Message reply);
+    public void serverIterationsUpdate(int serverId, int requestId, int currentIter);
 }

@@ -1,12 +1,15 @@
 
 package LoadBalancer;
 
+import Communication.CClient;
 import Communication.CServer;
 import Communication.Message;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Load balancer server to receive and process the messages.
@@ -19,32 +22,31 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
      */
     private final CServer cServer;
     /**
-     * Host name of the Monitor.
+     * Communication channel to the monitor.
      */
-    private String hostnameM;
+    private CClient cMonitor;
     /**
-     * Port of the Monitor.
+     * Communication channels to the servers.
      */
-    private int portM;
+    private final HashMap<Integer, CClient> cServers;
     
     /**
-     * Load Balancer Server instantiation without monitor information.
+     * Load Balancer Server instantiation.
      * @param port server socket port
      */
     public LoadBalancer(int port) {
         this.cServer = new CServer(port);
+        this.cServers = new HashMap<>();
     }
 
     /**
-     * Load Balancer Server instantiation with monitor information.
-     * @param port server socket port
-     * @param hostnameM monitor host name
-     * @param portM monitor port
+     * Establish a connection to the monitor.
+     * @param hostname host name of the monitor
+     * @param port port of the monitor
      */
-    public LoadBalancer(int port, String hostnameM, int portM) {
-        this.cServer = new CServer(port);
-        this.hostnameM = hostnameM;
-        this.portM = portM;
+    public void connectToMonitor(String hostname, int port){
+        this.cMonitor = new CClient(hostname, port);
+        this.cMonitor.connectToServer();
     }
     
     /**
@@ -68,7 +70,27 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
     }
 
     @Override
-    public void serverDown(Message message) {
+    public void requestReply(Message reply) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void serverDown(int serverId, List<Message> messages) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void newServer(int serverId, String hostname, int port) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void monitorUp(String hostname, int port) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void serversInfo(HashMap<Integer, Integer> serversOccupation) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
