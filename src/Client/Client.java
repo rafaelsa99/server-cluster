@@ -16,6 +16,10 @@ public class Client {
     private int port;
     
     private String host;
+    
+    private String lbHost;
+    
+    private int lbPort;
 
     public Client(int id, int port, String host) {
         this.id = id;
@@ -23,6 +27,13 @@ public class Client {
         this.host = host;
     }
 
+    public Client(int id, String lbHost, int lbPort) {
+        this.id = id;
+        this.lbHost = lbHost;
+        this.lbPort = lbPort;
+    }
+    
+    
     public int getId() {
         return id;
     }
@@ -33,6 +44,14 @@ public class Client {
 
     public String getHost() {
         return host;
+    }
+
+    public String getLbHost() {
+        return lbHost;
+    }
+
+    public int getLbPort() {
+        return lbPort;
     }
     
 }

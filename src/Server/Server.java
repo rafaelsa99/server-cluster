@@ -63,6 +63,5 @@ public class Server {
     public ArrayList<String> getRequests() {
         return requests;
     }
-
-        
+ 
 }

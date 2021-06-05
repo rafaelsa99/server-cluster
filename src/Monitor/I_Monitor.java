@@ -8,7 +8,6 @@ import Communication.Message;
  * @author luisc
  */
 public interface I_Monitor {
-       
     public void loadBalancerUp(String hostname, int port);
     public void serverHeartbeat(int serverId);
     public void newLBRequest(Message request);
