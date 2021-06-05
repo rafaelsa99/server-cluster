@@ -1,27 +1,15 @@
 
 package ControlPanel;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;
-import javax.swing.DefaultCellEditor;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -29,10 +17,8 @@ import javax.swing.table.TableCellRenderer;
  */
 public class ControlPanel_GUI extends javax.swing.JFrame {
 
-    private ReentrantLock rl;
+    private final ReentrantLock rl;
     private final Control control;
-    private HashMap<Integer, Integer> assTableServerID = new HashMap<Integer, Integer>();
-    private HashMap<Integer, Integer> assTableClientID = new HashMap<Integer, Integer>();
     
     /**
      * Creates new form ControlPanel_GUI
@@ -234,8 +220,6 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
 
     private void jButtonEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEndActionPerformed
         System.exit(0);
-        //addElemToTable(5);
-        //addElemToTable(10);
     }//GEN-LAST:event_jButtonEndActionPerformed
     
     
@@ -243,41 +227,41 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
         DefaultTableModel model;
         model = (DefaultTableModel) jTableServers.getModel();
         model.addRow(new Object[]{"Server " + serverId, serverId});
-        assTableServerID.put(serverId, model.getRowCount() - 1);
     }
     
     private void removeElemFromServerTable(Integer serverId){
         DefaultTableModel model;
         model = (DefaultTableModel) jTableServers.getModel();
-        model.removeRow(assTableServerID.get(serverId));
-        assTableServerID.remove(serverId);
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (((String)model.getValueAt(i, 0)).equals("Server " + serverId)) {
+                model.removeRow(i);
+            }
+        }
     }
     
         private void addElemToClientTable(Integer clientId){
         DefaultTableModel model;
         model = (DefaultTableModel) jTableClients.getModel();
         model.addRow(new Object[]{"Client " + clientId, clientId});
-        assTableClientID.put(clientId, model.getRowCount() - 1);
     }
     
     private void removeElemFromClientTable(Integer clientId){
         DefaultTableModel model;
         model = (DefaultTableModel) jTableClients.getModel();
-        model.removeRow(assTableClientID.get(clientId));
-        assTableClientID.remove(clientId);
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (((String)model.getValueAt(i, 0)).equals("Client " + clientId)) {
+                model.removeRow(i);
+            }
+        }
     }
         
     private void jButtonShutdownServerActionPerformed(Integer object) {                                           
-        //System.exit(0);
-        System.out.println("Clicked !" + object);
-        //Send Message To shutdownServer
+        control.shutdownServer(object);
         removeElemFromServerTable(object);
     }
     
     private void jButtonShutdownClientActionPerformed(Integer object) {                                           
-        //System.exit(0);
-        System.out.println("Clicked !" + object);
-        //Send Message To shutdownServer
+        control.shutdownClient(object);
         removeElemFromClientTable(object);
     } 
         /**
@@ -285,12 +269,7 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
     */
     class TableButtonRenderer extends DefaultTableCellRenderer {
         private static final long serialVersionUID = -7799441088157759804L;
-        //private JPanel panel;
         private JButton button;
-        private Color textSelectionColor = Color.BLACK;
-        private Color backgroundSelectionColor = Color.CYAN;
-        private Color textNonSelectionColor = Color.BLACK;
-        private Color backgroundNonSelectionColor = Color.WHITE;
 
         TableButtonRenderer() {
         }
@@ -303,29 +282,9 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
                 boolean hasFocus,
                 int row,
                 int col) {
-
-            //panel = new JPanel(new FlowLayout(FlowLayout.CENTER,0,3));
             
             button = new JButton();
-            //button.setOpaque(true);
-            //JLabel input = (JLabel)value;
-            button.setText("Shutdown");
-                        
-            //panel.add(button);
-            //label.setHorizontalAlignment(JLabel.CENTER);
-            //label.setIcon(input.getIcon());
-            //label.setText(input.getText());
-            //label.setToolTipText(input.getToolTipText());
-
-            if (isSelected) {
-                //panel.setBackground(backgroundSelectionColor);
-                //panel.setForeground(textSelectionColor);
-                //panel.setBackground(backgroundSelectionColor);
-            } else {
-                //panel.setBackground(backgroundNonSelectionColor);
-                //panel.setForeground(textNonSelectionColor);
-            }
-            //value = button;          
+            button.setText("Shutdown");        
             return button;
         }
         
@@ -340,8 +299,7 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
 
       @Override public void mouseClicked(MouseEvent e) {
         int column = table.getColumnModel().getColumnIndexAtX(e.getX());
-        int row    = e.getY()/table.getRowHeight(); 
-        //System.out.println("Col :"+column + "row:"+row);
+        int row = e.getY()/table.getRowHeight(); 
 
         if (row < table.getRowCount() && row >= 0 && column < table.getColumnCount() && column >= 0) {
           Object value = table.getValueAt(row, column);

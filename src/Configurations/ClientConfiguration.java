@@ -33,7 +33,6 @@ public class ClientConfiguration extends javax.swing.JFrame {
         jTextFieldLBPort = new javax.swing.JTextField();
         jLabelLBHost = new javax.swing.JLabel();
         jLabelLBPort = new javax.swing.JLabel();
-        jLabelInfo = new javax.swing.JLabel();
         jButtonStart = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -63,8 +62,6 @@ public class ClientConfiguration extends javax.swing.JFrame {
         jLabelLBPort.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabelLBPort.setText("Load Balancer Port:");
 
-        jLabelInfo.setText("* If Load Balancer is Already Running");
-
         jButtonStart.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButtonStart.setText("Start Client");
         jButtonStart.addActionListener(new java.awt.event.ActionListener() {
@@ -86,7 +83,6 @@ public class ClientConfiguration extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabelTitle)
-                            .addComponent(jLabelInfo)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabelLBHost)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -116,9 +112,7 @@ public class ClientConfiguration extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldLBPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelLBPort))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelInfo)
-                .addGap(18, 18, 18)
+                .addGap(39, 39, 39)
                 .addComponent(jButtonStart)
                 .addContainerGap(24, Short.MAX_VALUE))
         );
@@ -172,7 +166,6 @@ public class ClientConfiguration extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEnd;
     private javax.swing.JButton jButtonStart;
-    private javax.swing.JLabel jLabelInfo;
     private javax.swing.JLabel jLabelLBHost;
     private javax.swing.JLabel jLabelLBPort;
     private javax.swing.JLabel jLabelTitle;
