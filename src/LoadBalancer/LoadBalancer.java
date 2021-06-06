@@ -4,51 +4,68 @@ package LoadBalancer;
 import Communication.CClient;
 import Communication.CServer;
 import Communication.Message;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import Communication.MessageCodes;
+import Configurations.DefaultConfigs;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
 
 /**
- * Load balancer server to receive and process the messages.
+ * Load balancer server to receive and process messages.
  * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */
 public class LoadBalancer extends Thread implements I_LoadBalancer{
     
-    /**
-     * Communication Server. Basic server functions.
-     */
+    /** Communication Server. Basic server functions. */
     private final CServer cServer;
-    /**
-     * Communication channel to the monitor.
-     */
+    /** Communication channel to the monitor. */
     private CClient cMonitor;
-    /**
-     * Communication channels to the servers.
-     */
+    /** Communication channels to the servers. */
     private final HashMap<Integer, CClient> cServers;
+    /** Communication channels to the clients. */
+    private final HashMap<Integer, CClient> cClients;
     
     /**
      * Load Balancer Server instantiation.
      * @param port server socket port
+     * @param mHN monitor host name
+     * @param mPort monitor port
      */
-    public LoadBalancer(int port) {
+    public LoadBalancer(int port, String mHN, int mPort) {
         this.cServer = new CServer(port);
         this.cServers = new HashMap<>();
+        this.cClients = new HashMap<>();
+        initMonitorConnection(mHN, mPort, port);
     }
 
     /**
-     * Establish a connection to the monitor.
-     * @param hostname host name of the monitor
-     * @param port port of the monitor
+     * Check if monitor is up, and send information about the load balancer server port.
+     * @param hostname monitor host name
+     * @param mPort monitor port
+     * @param lbPort load balancer port
      */
-    public void connectToMonitor(String hostname, int port){
-        this.cMonitor = new CClient(hostname, port);
-        this.cMonitor.connectToServer();
+    private void initMonitorConnection(String hostname, int mPort, int lbPort){
+        if(CClient.testConnection(hostname, mPort)){
+            cMonitor = new CClient(hostname, mPort);
+            cMonitor.connectToServer();
+            Message msg = new Message(MessageCodes.REG_INFOR, DefaultConfigs.HOSTNAME, lbPort);
+            cMonitor.sendMessage(msg);
+        }
     }
     
+    /**
+     * Close all sockets connected to the load balancer.
+     */
+    public void closeSockets(){
+        cClients.values().forEach(c -> {
+            c.closeConnection();
+        });
+        cServers.values().forEach(c -> {
+            c.closeConnection();
+        });
+        cMonitor.closeConnection();
+    }
+
     /**
      * Life cycle of the server.
      * Await new clients while server socket is open.
@@ -58,82 +75,77 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
         Socket socket;
         cServer.openServer();
         while((socket = cServer.awaitClient()) != null)
-            new ProcessingThread(socket).start();
+            new SocketCommunicationsThread(socket).start();
     }
 
     @Override
-    public void newRequest(Message request) {
-        //CClient cClient = new CClient(hostnameServer, portServer);
-        //Message reply = cClient.sendMessageAndWaitForReply(request);
-        //return reply;
+    public synchronized void newRequest(Message request) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void requestReply(Message reply) {
+    public synchronized void requestReply(Message reply) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void serverDown(int serverId, List<Message> messages) {
+    public synchronized void serverDown(int serverId, List<Message> messages) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void newServer(int serverId, String hostname, int port) {
+    public synchronized void serversInfo(HashMap<Integer, Integer> serversOccupation) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void monitorUp(String hostname, int port) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void serversInfo(HashMap<Integer, Integer> serversOccupation) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public synchronized void newConnection(CClient cc, Message msg) {
+        switch (msg.getMessageCode()) {
+            case MessageCodes.REG_CLIENT:
+                cClients.put(msg.getClientId(), cc);
+                break;
+            case MessageCodes.REG_SERVER:
+                cServers.put(msg.getServerId(), cc);
+                break;
+            case MessageCodes.REG_INFOR:
+                cMonitor = cc;
+                break;
+            default:
+                cc.closeConnection();
+        }
     }
 
     /**
-     * Thread for processing a given message and send the reply message.
+     * Thread for handle the communications of a given socket.
      */
-    class ProcessingThread extends Thread{
+    class SocketCommunicationsThread extends Thread{
         
-        /**
-         * Socket connected to the client.
-         */
+        /** Socket connected to the client. */
         private final Socket socket;
 
         /**
-         * Processing thread instantiation.
+         * Socket communication thread instantiation.
          * @param socket socket connected to the client
          */
-        public ProcessingThread(Socket socket) {
+        public SocketCommunicationsThread(Socket socket) {
             this.socket = socket;
         }
 
         /**
-         * Processing thread life cycle.
+         * Socket communication thread life cycle.
          */
         @Override
         public void run() {
-            try (
-                    ObjectInputStream in = new ObjectInputStream (socket.getInputStream ());
-                    ObjectOutputStream out = new ObjectOutputStream (socket.getOutputStream ());
-                ) {
-                    Message input = (Message) in.readObject();
-                    // Check message code and execute corresponding function for processing
-                    switch(input.getMessageCode()){ 
-                        //...
-                    }
-                    // Reply message
-                    //out.writeObject(new Message(...)); 
-                    out.close();
-                    in.close();
-                    socket.close();
-                } catch (IOException | ClassNotFoundException e) {
-                    System.out.println(e.toString());
+            CClient cc = new CClient(socket);
+            Message msg = cc.receiveMessage();
+            newConnection(cc, msg);
+            while((msg = cc.receiveMessage()) != null){
+                switch(msg.getMessageCode()){
+                    case MessageCodes.REQUEST:
+                        newRequest(msg);
+                        break;
                 }
+            }
         }        
     }
 }

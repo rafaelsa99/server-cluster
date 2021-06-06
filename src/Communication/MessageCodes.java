@@ -47,6 +47,10 @@ public class MessageCodes {
      * Code for a empty reply message.
      */
     public static final int EMPTY_REPLY = 10;
+    /**
+     * Register new client code.
+     */
+    public static final int REG_CLIENT = 11;
     
     /**
      * It can not be instantiated.

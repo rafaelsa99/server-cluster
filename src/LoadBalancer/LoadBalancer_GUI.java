@@ -1,23 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package LoadBalancer;
 
-import Configurations.LBConfiguration;
-
 /**
- *
- * @author omp
+ * Load Balancer graphical interface.
+ * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */
 public class LoadBalancer_GUI extends javax.swing.JFrame {
-
+    
+    /** Load Balancer Service. */
+    private final LoadBalancer loadBalancer;
+    
     /**
-     * Creates new form LoadBalancer_GUI
+     * Creates new form LoadBalancer_GUI.
+     * @param port load balancer server port
+     * @param hostname monitor host name
+     * @param mPort monitor port
      */
     public LoadBalancer_GUI(int port, String hostname, int mPort) {
         initComponents();
+        this.loadBalancer = new LoadBalancer(port, hostname, mPort);
+        this.loadBalancer.start();
     }
 
     /**
@@ -71,11 +73,16 @@ public class LoadBalancer_GUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * End button action.
+     * @param evt event
+     */
     private void jButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExitActionPerformed
-        // TODO add your handling code here:
+        loadBalancer.closeSockets();
+        System.exit(0);
     }//GEN-LAST:event_jButtonExitActionPerformed
 
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonExit;
     private javax.swing.JLabel jLabel1;

@@ -209,6 +209,8 @@ public class Client_GUI extends javax.swing.JFrame {
     private void initConnection(String hostname, int port){
         cclient = new CClient(hostname, port);
         cclient.connectToServer();
+        Message msg = new Message(false, this.clientId, MessageCodes.REG_CLIENT);
+        cclient.sendMessage(msg);
     }
 
     /**
@@ -226,7 +228,7 @@ public class Client_GUI extends javax.swing.JFrame {
      * Remove from pending requests and adds to executed requests.
      * @param request completed request
      */
-    public void newExecutedRequest(Request request){
+    public synchronized void newExecutedRequest(Request request){
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(() -> {
                 newExecutedRequest(request);

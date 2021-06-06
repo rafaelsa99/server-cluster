@@ -12,9 +12,9 @@ import java.net.Socket;
  */
 public class CClient {
     /** Host name of the server. */
-    private final String hostName;
+    private String hostName;
     /** Port of the server. */
-    private final int portNumber;
+    private int portNumber;
     /** Socket connected to the server. */
     private Socket socket;
     /** Output stream of the communication channel. */
@@ -30,6 +30,21 @@ public class CClient {
     public CClient(String hostName, int portNumber) {
         this.hostName = hostName;
         this.portNumber = portNumber;
+    }
+    
+    /**
+     * CClient instantiation.
+     * @param socket socket to client
+     */
+    public CClient(Socket socket){
+        this.socket = socket;
+        try {
+            out = new ObjectOutputStream (socket.getOutputStream ());
+            in = new ObjectInputStream (socket.getInputStream ());
+        } catch(IOException e){
+            System.out.println("Couldn't get I/O for the connection to " + socket.getLocalAddress().getHostName());
+            System.exit(1);
+        }
     }
     
     /**
@@ -69,6 +84,8 @@ public class CClient {
     public void closeConnection(){
         if(socket.isConnected()){
             try {
+                in.close();
+                out.close();
                 socket.close();
             } catch (IOException ex) {
                 System.out.println(ex.toString());

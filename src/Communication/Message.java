@@ -90,14 +90,20 @@ public class Message implements Serializable{
     }
 
     /**
-     * Constructor for the heartbeat message and server DOWN messages.
-     * @param serverId server id
+     * Constructor for the heartbeat message, server DOWN, register server and register client messages.
+     * @param isServer true, if is heartbeat message, server DOWN, register server, false if is register client message
+     * @param sharedArg server id, if isServer, client id otherwise
      * @param messageCode message code
      */
-    public Message(int serverId, int messageCode) {
-        this.serverId = serverId;
+    public Message(boolean isServer, int sharedArg, int messageCode) {
+        if(isServer){
+            this.serverId = sharedArg;
+            this.clientId = 0;
+        } else{
+            this.serverId = 0;
+            this.clientId = sharedArg;
+        }
         this.messageCode = messageCode;
-        this.clientId = 0;
         this.requestId = 0;
         this.iterations = 0;
         this.valueNa = "0";
@@ -106,22 +112,16 @@ public class Message implements Serializable{
     }
 
     /**
-     * Constructor to register a new server / assign request to server.
-     * @param isAssignment false -> is to register a new server ; true -> is to assign a request to a server
+     * Constructor to assign a request to server.
      * @param serverId server id
      * @param messageCode message code
-     * @param sharedArg port of the server, if register a new server, OR request id, if request assignment
+     * @param requestId request id
      */
-    public Message(boolean isAssignment, int serverId, int messageCode, int sharedArg) {
+    public Message(int serverId, int messageCode, int requestId) {
         this.serverId = serverId;
         this.messageCode = messageCode;
-        if(isAssignment){
-            this.port = 0;
-            this.requestId = sharedArg;
-        } else {
-            this.port = sharedArg;
-            this.requestId = 0;
-        }
+        this.port = 0;
+        this.requestId = requestId;
         this.clientId = 0;
         this.iterations = 0;
         this.valueNa = "0";
