@@ -2,8 +2,10 @@
 package Configurations;
 
 import Client.Client_GUI;
+import Communication.CClient;
 import java.awt.Color;
 import java.awt.SystemColor;
+import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
 
 /**
@@ -150,6 +152,10 @@ public class ClientConfiguration extends javax.swing.JFrame {
             return;
         }
         int lbPort = (int)jSpinnerLBPort.getValue();
+        if(!CClient.testConnection(hostname, lbPort)){
+            JOptionPane.showMessageDialog(null, "Load Balancer must be running to start a client!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         this.setVisible(false);
         new Client_GUI(clientID, hostname, lbPort).setVisible(true);
     }//GEN-LAST:event_jButtonStartActionPerformed

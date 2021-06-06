@@ -22,6 +22,8 @@ public class DefaultConfigs {
     public static final int QUEUE_SIZE = 2;
     /** Default maximum number of simultaneous requests. */
     public static final int MAX_REQUESTS = 3;
+    /** Default number of iterations. */
+    public static final int NUMBER_ITERATIONS = 5;
     
     /**
      * It cannot be instantiated.

@@ -1,53 +1,74 @@
 
 package Client;
 
+import Communication.CClient;
+import Communication.Message;
+import Communication.MessageCodes;
+
 /**
  * Client to receive the reply messages.
  * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */
 public class Client extends Thread{
     
-    private int id;
-    
-    private int port;
-    
-    private String host;
-    
-    private String lbHost;
-    
-    private int lbPort;
+    /** Communication Client. */
+    private final CClient cclient;
+    /** Client GUI. */
+    private final Client_GUI clientGUI;
 
-    public Client(int id, int port, String host) {
-        this.id = id;
-        this.port = port;
-        this.host = host;
-    }
-
-    public Client(int id, String lbHost, int lbPort) {
-        this.id = id;
-        this.lbHost = lbHost;
-        this.lbPort = lbPort;
-    }
-    
-    
-    public int getId() {
-        return id;
+    /**
+     * Client instantiation.
+     * @param cclient communication client
+     * @param clientGUI client GUI
+     */
+    public Client(CClient cclient, Client_GUI clientGUI) {
+        this.cclient = cclient;
+        this.clientGUI = clientGUI;
     }
 
-    public int getPort() {
-        return port;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public String getLbHost() {
-        return lbHost;
-    }
-
-    public int getLbPort() {
-        return lbPort;
-    }
+    /**
+     * Client thread life cycle.
+     */
+    @Override
+    public void run() {
+        Message msg;
+        while((msg = cclient.receiveMessage()) != null)            
+            new ProcessingThread(msg).start();
+    } 
     
+    /**
+     * Thread for processing a message received.
+     */
+    class ProcessingThread extends Thread{
+        
+        /** Message received to be processed. */
+        private final Message msg;
+
+        /**
+         * Processing thread instantiation.
+         * @param msg message to process
+         */
+        public ProcessingThread(Message msg) {
+            this.msg = msg;
+        }
+
+        /**
+         * Processing thread life cycle.
+         */
+        @Override
+        public void run() {
+            Request request;
+            switch (msg.getMessageCode()) {
+                case MessageCodes.REPLY:
+                    request = new Request(msg.getRequestId(), msg.getIterations(), msg.getValueNa());
+                    break;
+                case MessageCodes.REJECTION:
+                    request = new Request(msg.getRequestId(), msg.getIterations(), "REJECTED");
+                    break;
+                default:
+                    return;
+            }
+            clientGUI.newExecutedRequest(request);
+        }
+    }
 }

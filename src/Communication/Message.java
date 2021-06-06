@@ -20,7 +20,7 @@ public class Message implements Serializable{
     /** Number of iterations. */
     private final int iterations;
     /** Value of NA, Avogadro Constant. */
-    private final double valueNa;
+    private final String valueNa;
     /** Host name. */
     private final String hostname;
     /** Port. */
@@ -45,7 +45,7 @@ public class Message implements Serializable{
         this.requestId = requestId;
         this.messageCode = messageCode;
         this.iterations = iterations;
-        this.valueNa = 0;
+        this.valueNa = "0";
         this.hostname = "";
         this.port = 0;
     }
@@ -59,7 +59,7 @@ public class Message implements Serializable{
      * @param iterations number of iterations
      * @param valueNa NA calculation value
      */
-    public Message(int clientId, int requestId, int serverId, int messageCode, int iterations, double valueNa) {
+    public Message(int clientId, int requestId, int serverId, int messageCode, int iterations, String valueNa) {
         this.clientId = clientId;
         this.requestId = requestId;
         this.serverId = serverId;
@@ -84,7 +84,7 @@ public class Message implements Serializable{
         this.serverId = serverId;
         this.messageCode = messageCode;
         this.iterations = iterations;
-        this.valueNa = 0;
+        this.valueNa = "0";
         this.hostname = "";
         this.port = 0;
     }
@@ -100,7 +100,7 @@ public class Message implements Serializable{
         this.clientId = 0;
         this.requestId = 0;
         this.iterations = 0;
-        this.valueNa = 0;
+        this.valueNa = "0";
         this.hostname = "";
         this.port = 0;
     }
@@ -124,7 +124,7 @@ public class Message implements Serializable{
         }
         this.clientId = 0;
         this.iterations = 0;
-        this.valueNa = 0;
+        this.valueNa = "0";
         this.hostname = "";
     }
 
@@ -141,7 +141,7 @@ public class Message implements Serializable{
         this.messageCode = messageCode;
         this.iterations = iterations;
         this.clientId = 0;
-        this.valueNa = 0;
+        this.valueNa = "0";
         this.hostname = "";
         this.port = 0;
     }
@@ -160,7 +160,7 @@ public class Message implements Serializable{
         this.serverId = 0;
         this.requestId = 0;
         this.iterations = 0;
-        this.valueNa = 0;
+        this.valueNa = "0";
     }
 
     /**
@@ -175,7 +175,7 @@ public class Message implements Serializable{
         this.serverId = 0;
         this.requestId = 0;
         this.iterations = 0;
-        this.valueNa = 0;
+        this.valueNa = "0";
     }
     
     /**
@@ -222,7 +222,7 @@ public class Message implements Serializable{
      * Get Avogrado Number.
      * @return avogrado number
      */
-    public double getValueNa() {
+    public String getValueNa() {
         return valueNa;
     }
 

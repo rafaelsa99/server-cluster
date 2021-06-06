@@ -47,6 +47,23 @@ public class CClient {
     }
     
     /**
+     * Test the connection to a server.
+     * @param hn server host name
+     * @param p server port
+     * @return true, if connection was established, false otherwise
+     */
+    public static boolean testConnection(String hn, int p){
+        try {
+            Socket echo = new Socket(hn, p);
+            echo.close();
+        } catch(IOException e){
+            System.out.println("Couldn't get I/O for the connection to " + hn);
+            return false;
+        }
+        return true;
+    }
+    
+    /**
      * Close the connection to the server.
      */
     public void closeConnection(){

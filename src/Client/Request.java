@@ -24,6 +24,18 @@ public class Request {
     }
 
     /**
+     * Request Instantiation.
+     * @param id request id
+     * @param nIterations number of iterations 
+     * @param reply reply message
+     */
+    public Request(int id, int nIterations, String reply) {
+        this.id = id;
+        this.nIterations = nIterations;
+        this.reply = reply;
+    }
+    
+    /**
      * Get the Request ID.
      * @return request id
      */
