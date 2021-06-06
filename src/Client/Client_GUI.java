@@ -28,7 +28,7 @@ public class Client_GUI extends javax.swing.JFrame {
     /**
      * Creates new form GUI_Client
      */
-    public Client_GUI(int clientID, int port, String hostname, int lbPort) {
+    public Client_GUI(int clientID, String hostname, int lbPort) {
         initComponents();
         //this.client = client;
         this.requests = new ArrayList<Request>();

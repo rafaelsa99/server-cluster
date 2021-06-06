@@ -7,15 +7,16 @@ import java.awt.SystemColor;
 import javax.swing.SpinnerNumberModel;
 
 /**
- *
+ * Server configuration.
  * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */
 public class ServerConfiguration extends javax.swing.JFrame {
 
+    /** Server id. */
     private final int serverID;
     
     /**
-     * Creates new form ServerConfiguration
+     * Creates new form ServerConfiguration.
      * @param serverID server id
      */
     public ServerConfiguration(int serverID) {
@@ -43,7 +44,6 @@ public class ServerConfiguration extends javax.swing.JFrame {
         jLabelMHost = new javax.swing.JLabel();
         jLabelMPort = new javax.swing.JLabel();
         jButtonStart = new javax.swing.JButton();
-        jLabelPort = new javax.swing.JLabel();
         jLabelQueueSize = new javax.swing.JLabel();
         jLabelMaxRequests = new javax.swing.JLabel();
         jLabelHeartbeatTimeout = new javax.swing.JLabel();
@@ -54,7 +54,6 @@ public class ServerConfiguration extends javax.swing.JFrame {
         jSpinnerIterationTimeout = new javax.swing.JSpinner();
         jSpinnerMaxRequests = new javax.swing.JSpinner();
         jSpinnerQueueSize = new javax.swing.JSpinner();
-        jSpinnerPort = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -107,9 +106,6 @@ public class ServerConfiguration extends javax.swing.JFrame {
             }
         });
 
-        jLabelPort.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabelPort.setText("Port:");
-
         jLabelQueueSize.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabelQueueSize.setText("Queue Size:");
 
@@ -132,35 +128,33 @@ public class ServerConfiguration extends javax.swing.JFrame {
                 .addGap(209, 209, 209))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabelIterationTime)
-                            .addComponent(jLabelMaxRequests)
-                            .addComponent(jLabelQueueSize)
-                            .addComponent(jLabelPort))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSpinnerQueueSize, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSpinnerMaxRequests, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSpinnerIterationTimeout, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(7, 7, 7))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(jLabelHeartbeatTimeout)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jSpinnerHeartbeatTimeout, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
+                        .addGap(267, 267, 267)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButtonEnd, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jButtonStart)
                                 .addGap(228, 228, 228))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(48, 48, 48)
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabelIterationTime)
+                                    .addComponent(jLabelMaxRequests)
+                                    .addComponent(jLabelQueueSize))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jSpinnerQueueSize, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jSpinnerMaxRequests, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jSpinnerIterationTimeout, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(7, 7, 7))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(5, 5, 5)
+                                .addComponent(jLabelHeartbeatTimeout)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jSpinnerHeartbeatTimeout, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(42, 42, 42)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabelLBHost)
@@ -185,31 +179,9 @@ public class ServerConfiguration extends javax.swing.JFrame {
                 .addComponent(jLabelTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonEnd)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabelPort)
-                            .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabelQueueSize)
-                            .addComponent(jSpinnerQueueSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(14, 14, 14)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabelMaxRequests)
-                            .addComponent(jSpinnerMaxRequests, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabelIterationTime)
-                            .addComponent(jSpinnerIterationTimeout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabelHeartbeatTimeout)
-                            .addComponent(jSpinnerHeartbeatTimeout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextFieldLBHost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabelLBHost))
@@ -224,8 +196,24 @@ public class ServerConfiguration extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabelMPort)
-                            .addComponent(jSpinnerMPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(30, 30, 30)))
+                            .addComponent(jSpinnerMPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelQueueSize)
+                            .addComponent(jSpinnerQueueSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(14, 14, 14)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelMaxRequests)
+                            .addComponent(jSpinnerMaxRequests, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelIterationTime)
+                            .addComponent(jSpinnerIterationTimeout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelHeartbeatTimeout)
+                            .addComponent(jSpinnerHeartbeatTimeout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(30, 30, 30)
                 .addComponent(jButtonStart)
                 .addContainerGap(29, Short.MAX_VALUE))
         );
@@ -233,8 +221,10 @@ public class ServerConfiguration extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Initialize the GUI with the default values.
+     */
     private void initDefaults(){
-        jSpinnerPort.setModel(new SpinnerNumberModel(DefaultConfigs.SERVER_BASE_PORT + serverID, 1, 65535, 1));
         jSpinnerLBPort.setModel(new SpinnerNumberModel(DefaultConfigs.LB_PORT, 1, 65535, 1));
         jSpinnerMPort.setModel(new SpinnerNumberModel(DefaultConfigs.M_PORT, 1, 65535, 1));
         jSpinnerHeartbeatTimeout.setModel(new SpinnerNumberModel(DefaultConfigs.HEARTBEAT_TIMEOUT, 1, Integer.MAX_VALUE, 1));
@@ -245,10 +235,19 @@ public class ServerConfiguration extends javax.swing.JFrame {
         jTextFielMHost.setText(DefaultConfigs.HOSTNAME);
     }
     
+    /**
+     * End button action.
+     * @param evt event
+     */
     private void jButtonEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEndActionPerformed
         System.exit(0);
     }//GEN-LAST:event_jButtonEndActionPerformed
 
+    /**
+     * Start Button Action.
+     * Start server GUI with the configurations.
+     * @param evt event
+     */
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
         String lbhostname = jTextFieldLBHost.getText();
         String mhostname = jTextFielMHost.getText();
@@ -262,7 +261,6 @@ public class ServerConfiguration extends javax.swing.JFrame {
             jTextFielMHost.setBackground(Color.red);
             return;
         }
-        int port = (int)jSpinnerPort.getValue();
         int lbPort = (int)jSpinnerLBPort.getValue();
         int mPort = (int)jSpinnerMPort.getValue();
         int heartbeat = (int)jSpinnerHeartbeatTimeout.getValue();
@@ -270,22 +268,36 @@ public class ServerConfiguration extends javax.swing.JFrame {
         int queue = (int) jSpinnerQueueSize.getValue();
         int maxReq = (int)jSpinnerMaxRequests.getValue();
         this.setVisible(false);
-        new Server_GUI(port, lbhostname, lbPort, mhostname, mPort, heartbeat, iteration, queue, maxReq).setVisible(true);
+        new Server_GUI(lbhostname, lbPort, mhostname, mPort, heartbeat, iteration, queue, maxReq).setVisible(true);
     }//GEN-LAST:event_jButtonStartActionPerformed
 
+    /**
+     * Load Balancer host name focus event.
+     * Reset background color.
+     * @param evt event
+     */
     private void jTextFieldLBHostFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldLBHostFocusGained
         jTextFieldLBHost.setBackground(SystemColor.text);
     }//GEN-LAST:event_jTextFieldLBHostFocusGained
 
+    /**
+     * Monitor host name focus event.
+     * Reset background color.
+     * @param evt event
+     */
     private void jTextFielMHostFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFielMHostFocusGained
         jTextFielMHost.setBackground(SystemColor.text);
     }//GEN-LAST:event_jTextFielMHostFocusGained
 
+    /**
+     * Change GUI title label.
+     */
     private void labelChange(){
         jLabelTitle.setText("Server " + this.serverID + " Configuration");
     }
     
     /**
+     * Main function.
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -333,7 +345,6 @@ public class ServerConfiguration extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelMHost;
     private javax.swing.JLabel jLabelMPort;
     private javax.swing.JLabel jLabelMaxRequests;
-    private javax.swing.JLabel jLabelPort;
     private javax.swing.JLabel jLabelQueueSize;
     private javax.swing.JLabel jLabelTitle;
     private javax.swing.JSpinner jSpinnerHeartbeatTimeout;
@@ -341,7 +352,6 @@ public class ServerConfiguration extends javax.swing.JFrame {
     private javax.swing.JSpinner jSpinnerLBPort;
     private javax.swing.JSpinner jSpinnerMPort;
     private javax.swing.JSpinner jSpinnerMaxRequests;
-    private javax.swing.JSpinner jSpinnerPort;
     private javax.swing.JSpinner jSpinnerQueueSize;
     private javax.swing.JTextField jTextFielMHost;
     private javax.swing.JTextField jTextFieldLBHost;

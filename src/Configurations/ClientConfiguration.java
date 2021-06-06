@@ -7,15 +7,16 @@ import java.awt.SystemColor;
 import javax.swing.SpinnerNumberModel;
 
 /**
- *
+ * Client configuration.
  * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */
 public class ClientConfiguration extends javax.swing.JFrame {
 
+    /** Client ID. */
     private final int clientID;
     
     /**
-     * Creates new form ClientConfiguration
+     * Creates new form ClientConfiguration.
      * @param clienteID client id
      */
     public ClientConfiguration(int clienteID) {
@@ -40,8 +41,6 @@ public class ClientConfiguration extends javax.swing.JFrame {
         jLabelLBHost = new javax.swing.JLabel();
         jLabelLBPort = new javax.swing.JLabel();
         jButtonStart = new javax.swing.JButton();
-        jLabelPort = new javax.swing.JLabel();
-        jSpinnerPort = new javax.swing.JSpinner();
         jSpinnerLBPort = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -80,9 +79,6 @@ public class ClientConfiguration extends javax.swing.JFrame {
             }
         });
 
-        jLabelPort.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabelPort.setText("Port:");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -103,11 +99,7 @@ public class ClientConfiguration extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabelLBPort)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jSpinnerLBPort, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabelPort)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jSpinnerLBPort, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(123, 123, 123))))
             .addGroup(layout.createSequentialGroup()
                 .addGap(149, 149, 149)
@@ -121,20 +113,16 @@ public class ClientConfiguration extends javax.swing.JFrame {
                 .addComponent(jLabelTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonEnd)
-                .addGap(3, 3, 3)
+                .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabelPort)
-                            .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextFieldLBHost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabelLBHost))
                         .addGap(18, 18, 18)
                         .addComponent(jLabelLBPort))
                     .addComponent(jSpinnerLBPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
+                .addGap(45, 45, 45)
                 .addComponent(jButtonStart)
                 .addContainerGap(44, Short.MAX_VALUE))
         );
@@ -142,37 +130,56 @@ public class ClientConfiguration extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * End button action.
+     * @param evt event
+     */
     private void jButtonEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEndActionPerformed
         System.exit(0);
     }//GEN-LAST:event_jButtonEndActionPerformed
 
+    /**
+     * Start Button Action.
+     * Start Client GUI with the configurations.
+     * @param evt event
+     */
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
         String hostname = jTextFieldLBHost.getText();
         if(hostname.isBlank()){
             jTextFieldLBHost.setBackground(Color.red);
             return;
         }
-        int port = (int)jSpinnerPort.getValue();
         int lbPort = (int)jSpinnerLBPort.getValue();
         this.setVisible(false);
-        new Client_GUI(clientID, port, hostname, lbPort).setVisible(true);
+        new Client_GUI(clientID, hostname, lbPort).setVisible(true);
     }//GEN-LAST:event_jButtonStartActionPerformed
 
+    /**
+     * Load Balancer host name focus event.
+     * Reset background color.
+     * @param evt event
+     */
     private void jTextFieldLBHostFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldLBHostFocusGained
         jTextFieldLBHost.setBackground(SystemColor.text);
     }//GEN-LAST:event_jTextFieldLBHostFocusGained
 
+    /**
+     * Change GUI title label.
+     */
     private void labelChange(){
         jLabelTitle.setText("Client " + this.clientID + " Configuration");
     }
     
+    /**
+     * Initialize the GUI with the default values.
+     */
     private void initDefaults() {
-        jSpinnerPort.setModel(new SpinnerNumberModel(DefaultConfigs.CLIENT_BASE_PORT + clientID, 1, 65535, 1));
         jSpinnerLBPort.setModel(new SpinnerNumberModel(DefaultConfigs.LB_PORT, 1, 65535, 1));
         jTextFieldLBHost.setText(DefaultConfigs.HOSTNAME);
     }
     
     /**
+     * Main function.
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -221,10 +228,8 @@ public class ClientConfiguration extends javax.swing.JFrame {
     private javax.swing.JButton jButtonStart;
     private javax.swing.JLabel jLabelLBHost;
     private javax.swing.JLabel jLabelLBPort;
-    private javax.swing.JLabel jLabelPort;
     private javax.swing.JLabel jLabelTitle;
     private javax.swing.JSpinner jSpinnerLBPort;
-    private javax.swing.JSpinner jSpinnerPort;
     private javax.swing.JTextField jTextFieldLBHost;
     // End of variables declaration//GEN-END:variables
 

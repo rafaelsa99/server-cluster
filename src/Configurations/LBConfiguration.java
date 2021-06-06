@@ -7,13 +7,13 @@ import java.awt.SystemColor;
 import javax.swing.SpinnerNumberModel;
 
 /**
- *
+ * Load Balancer Configuration.
  * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */
 public class LBConfiguration extends javax.swing.JFrame {
 
     /**
-     * Creates new form LBConfiguration
+     * Creates new form LBConfiguration.
      */
     public LBConfiguration() {
         initComponents();
@@ -136,16 +136,28 @@ public class LBConfiguration extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Initialize the GUI with the default values.
+     */
     private void initDefaults(){
         jSpinnerPort.setModel(new SpinnerNumberModel(DefaultConfigs.LB_PORT, 1, 65535, 1));
         jSpinnerMPort.setModel(new SpinnerNumberModel(DefaultConfigs.M_PORT, 1, 65535, 1));
         jTextFieldMHost.setText(DefaultConfigs.HOSTNAME);
-   }
+    }
     
+    /**
+     * End button action.
+     * @param evt event
+     */
     private void jButtonEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEndActionPerformed
         System.exit(0);
     }//GEN-LAST:event_jButtonEndActionPerformed
 
+    /**
+     * Start Button Action.
+     * Start Load Balancer GUI with the configurations.
+     * @param evt event
+     */
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
         String hostname = jTextFieldMHost.getText();
         if(hostname.isBlank()){
@@ -158,11 +170,17 @@ public class LBConfiguration extends javax.swing.JFrame {
         new LoadBalancer_GUI(port, hostname, mPort).setVisible(true);
     }//GEN-LAST:event_jButtonStartActionPerformed
 
+    /**
+     * Monitor host name focus event.
+     * Reset background color.
+     * @param evt event
+     */
     private void jTextFieldMHostFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldMHostFocusGained
         jTextFieldMHost.setBackground(SystemColor.text);
     }//GEN-LAST:event_jTextFieldMHostFocusGained
 
     /**
+     * Main function.
      * @param args the command line arguments
      */
     public static void main(String args[]) {

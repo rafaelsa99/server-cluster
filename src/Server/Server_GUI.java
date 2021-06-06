@@ -14,7 +14,7 @@ public class Server_GUI extends javax.swing.JFrame {
     /**
      * Creates new form Server_GUI
      */
-    public Server_GUI(int port, String lbHostname, int lbPort, String mHostname, int mPort,
+    public Server_GUI(String lbHostname, int lbPort, String mHostname, int mPort,
             int heartbeatTimeout, int iterationTimeout, int queueSize, int maxRequests) {
         initComponents();
     }

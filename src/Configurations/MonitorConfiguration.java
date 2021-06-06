@@ -1,20 +1,19 @@
 
 package Configurations;
 
-import LoadBalancer.LoadBalancer_GUI;
 import Monitor.Monitor_GUI;
 import java.awt.Color;
 import java.awt.SystemColor;
 import javax.swing.SpinnerNumberModel;
 
 /**
- *
+ * Monitor Configuration.
  * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */
 public class MonitorConfiguration extends javax.swing.JFrame {
 
     /**
-     * Creates new form MonitorConfiguration
+     * Creates new form MonitorConfiguration.
      */
     public MonitorConfiguration() {
         initComponents();
@@ -152,6 +151,9 @@ public class MonitorConfiguration extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Initialize the GUI with the default values.
+     */
     private void initDefaults(){
         jSpinnerPort.setModel(new SpinnerNumberModel(DefaultConfigs.M_PORT, 1, 65535, 1));
         jSpinnerLBPort.setModel(new SpinnerNumberModel(DefaultConfigs.LB_PORT, 1, 65535, 1));
@@ -159,10 +161,19 @@ public class MonitorConfiguration extends javax.swing.JFrame {
         jTextFieldLBHost.setText(DefaultConfigs.HOSTNAME);
     }
     
+    /**
+     * End button action.
+     * @param evt event
+     */
     private void jButtonEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEndActionPerformed
         System.exit(0);
     }//GEN-LAST:event_jButtonEndActionPerformed
 
+    /**
+     * Start Button Action.
+     * Start Monitor GUI with the configurations.
+     * @param evt event
+     */
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
         String hostname = jTextFieldLBHost.getText();
         if(hostname.isBlank()){
@@ -176,11 +187,17 @@ public class MonitorConfiguration extends javax.swing.JFrame {
         new Monitor_GUI(port, hostname, lbPort, threshold).setVisible(true);
     }//GEN-LAST:event_jButtonStartActionPerformed
 
+    /**
+     * Load Balancer host name focus event.
+     * Reset background color.
+     * @param evt event
+     */
     private void jTextFieldLBHostFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldLBHostFocusGained
         jTextFieldLBHost.setBackground(SystemColor.text);
     }//GEN-LAST:event_jTextFieldLBHostFocusGained
 
     /**
+     * Main function.
      * @param args the command line arguments
      */
     public static void main(String args[]) {
