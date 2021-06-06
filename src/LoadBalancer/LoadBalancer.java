@@ -63,7 +63,8 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
         cServers.values().forEach(c -> {
             c.closeConnection();
         });
-        cMonitor.closeConnection();
+        if(cMonitor != null)
+            cMonitor.closeConnection();
     }
 
     /**
@@ -74,8 +75,11 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
     public void run() {
         Socket socket;
         cServer.openServer();
-        while((socket = cServer.awaitClient()) != null)
-            new SocketCommunicationsThread(socket).start();
+        while(cServer.isConnected()){
+            socket = cServer.awaitClient();
+            if(socket != null)
+                new SocketCommunicationsThread(socket).start();
+        }
     }
 
     @Override
@@ -138,12 +142,14 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
         public void run() {
             CClient cc = new CClient(socket);
             Message msg = cc.receiveMessage();
-            newConnection(cc, msg);
-            while((msg = cc.receiveMessage()) != null){
-                switch(msg.getMessageCode()){
-                    case MessageCodes.REQUEST:
-                        newRequest(msg);
-                        break;
+            if(msg != null){
+                newConnection(cc, msg);
+                while((msg = cc.receiveMessage()) != null){
+                    switch(msg.getMessageCode()){
+                        case MessageCodes.REQUEST:
+                            newRequest(msg);
+                            break;
+                    }
                 }
             }
         }        

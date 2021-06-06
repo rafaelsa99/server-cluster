@@ -1,9 +1,11 @@
 
 package Configurations;
 
+import Communication.CClient;
 import Server.Server_GUI;
 import java.awt.Color;
 import java.awt.SystemColor;
+import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
 
 /**
@@ -267,6 +269,14 @@ public class ServerConfiguration extends javax.swing.JFrame {
         int iteration = (int)jSpinnerIterationTimeout.getValue();
         int queue = (int) jSpinnerQueueSize.getValue();
         int maxReq = (int)jSpinnerMaxRequests.getValue();
+        if(!CClient.testConnection(lbhostname, lbPort)){
+            JOptionPane.showMessageDialog(null, "Load Balancer must be running to start a server!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(!CClient.testConnection(mhostname, mPort)){
+            JOptionPane.showMessageDialog(null, "Monitor must be running to start a server!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         this.setVisible(false);
         new Server_GUI(lbhostname, lbPort, mhostname, mPort, heartbeat, iteration, queue, maxReq).setVisible(true);
     }//GEN-LAST:event_jButtonStartActionPerformed

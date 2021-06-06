@@ -33,9 +33,9 @@ public class Client_GUI extends javax.swing.JFrame {
     public Client_GUI(int clientID, String hostname, int lbPort) {
         initComponents();
         jSpinnerInteractionsCount.setModel(new SpinnerNumberModel(DefaultConfigs.NUMBER_ITERATIONS, 1, Integer.MAX_VALUE, 1));
-        initConnection(hostname, lbPort);
         REQUEST_COUNTER = 1000 * clientID;
         this.clientId = clientID;
+        initConnection(hostname, lbPort);
         this.client = new Client(cclient, this);
         client.start();
     }

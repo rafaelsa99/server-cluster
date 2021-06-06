@@ -246,7 +246,7 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
         }
     }
     
-        private void addElemToClientTable(Integer clientId){
+    private void addElemToClientTable(Integer clientId){
         DefaultTableModel model;
         model = (DefaultTableModel) jTableClients.getModel();
         model.addRow(new Object[]{"Client " + clientId, clientId});
