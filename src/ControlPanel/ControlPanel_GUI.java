@@ -4,7 +4,6 @@ package ControlPanel;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.JButton;
 import javax.swing.JTable;
@@ -48,6 +47,7 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
         jTableServers = new javax.swing.JTable();
         jScrollPaneClients = new javax.swing.JScrollPane();
         jTableClients = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -126,6 +126,9 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
 
         jTabbedPane.addTab("Clients", jScrollPaneClients);
 
+        jLabel1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jLabel1.setText("Control Panel");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -135,7 +138,9 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTabbedPane)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addGap(173, 173, 173)
                         .addComponent(jButtonEnd))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jToggleButtonStartLoadBalancer)
@@ -152,7 +157,9 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButtonEnd)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonEnd)
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jToggleButtonStartLoadBalancer)
@@ -351,6 +358,7 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
     private javax.swing.JButton jButtonEnd;
     private javax.swing.JButton jButtonNewClient;
     private javax.swing.JButton jButtonNewServer;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPaneClients;
     private javax.swing.JScrollPane jScrollPaneServers;
     private javax.swing.JTabbedPane jTabbedPane;

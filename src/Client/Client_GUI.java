@@ -28,9 +28,9 @@ public class Client_GUI extends javax.swing.JFrame {
     /**
      * Creates new form GUI_Client
      */
-    public Client_GUI(Client client) {
+    public Client_GUI(int clientID, int port, String hostname, int lbPort) {
         initComponents();
-        this.client = client;
+        //this.client = client;
         this.requests = new ArrayList<Request>();
         this.assPendingRequest = new HashMap<Integer, Integer>();
     }
@@ -209,42 +209,6 @@ public class Client_GUI extends javax.swing.JFrame {
         model = (DefaultTableModel) jTableExecutedRequests.getModel();
         model.addRow(new Object[]{"Request " + request.getId(), request.getnIterations(),request.getReply()});
     }
-    /**
-     * @param args the command line arguments
-     */
-    //public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-    /*    try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Client_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Client_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Client_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Client_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-    */
-        /* Create and display the form */
-    /*    java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Client_GUI().setVisible(true);
-            }
-        });
-    }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEnd;

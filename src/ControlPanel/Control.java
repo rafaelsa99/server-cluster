@@ -44,7 +44,9 @@ public class Control {
     }
     
     public int startClient(){
-        ProcessBuilder pbC = getProcessBuilder(Configurations.ClientConfiguration.class, new ArrayList<>(++CLIENT_COUNTER));
+        List<String> args = new ArrayList<>();
+        args.add(String.valueOf(++CLIENT_COUNTER));
+        ProcessBuilder pbC = getProcessBuilder(Configurations.ClientConfiguration.class, args);
         try {
             pClientList.put(CLIENT_COUNTER, pbC.start());
         } catch (IOException ex) {
@@ -54,7 +56,9 @@ public class Control {
     }
     
     public int startServer(){
-        ProcessBuilder pbS = getProcessBuilder(Configurations.ServerConfiguration.class, new ArrayList<>(++SERVER_COUNTER));
+        List<String> args = new ArrayList<>();
+        args.add(String.valueOf(++SERVER_COUNTER));
+        ProcessBuilder pbS = getProcessBuilder(Configurations.ServerConfiguration.class, args);
         try {
             pServerList.put(SERVER_COUNTER, pbS.start());
         } catch (IOException ex) {
@@ -105,7 +109,6 @@ public class Control {
         command.add(classpath);
         command.add(className);
         command.addAll(args);
-
         return new ProcessBuilder(command);
     }
 }

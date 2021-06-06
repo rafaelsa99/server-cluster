@@ -1,13 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Configurations;
+
+import LoadBalancer.LoadBalancer_GUI;
+import Monitor.Monitor_GUI;
+import java.awt.Color;
+import java.awt.SystemColor;
+import javax.swing.SpinnerNumberModel;
 
 /**
  *
- * @author luisc
+ * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */
 public class MonitorConfiguration extends javax.swing.JFrame {
 
@@ -16,6 +18,7 @@ public class MonitorConfiguration extends javax.swing.JFrame {
      */
     public MonitorConfiguration() {
         initComponents();
+        initDefaults();
     }
 
     /**
@@ -30,15 +33,14 @@ public class MonitorConfiguration extends javax.swing.JFrame {
         jLabelTitle = new javax.swing.JLabel();
         jButtonEnd = new javax.swing.JButton();
         jLabelPort = new javax.swing.JLabel();
-        jTextFieldPort = new javax.swing.JTextField();
-        jTextFieldHeartBeatThreshold = new javax.swing.JTextField();
         jTextFieldLBHost = new javax.swing.JTextField();
-        jTextFieldLBPort = new javax.swing.JTextField();
         jLabelLBHost = new javax.swing.JLabel();
-        jLabelHeartBeatTH = new javax.swing.JLabel();
+        jLabelHeartBeatTh = new javax.swing.JLabel();
         jLabelLBPort = new javax.swing.JLabel();
-        jLabelInfo = new javax.swing.JLabel();
         jButtonStart = new javax.swing.JButton();
+        jSpinnerLBPort = new javax.swing.JSpinner();
+        jSpinnerHeartbeatTh = new javax.swing.JSpinner();
+        jSpinnerPort = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -56,32 +58,23 @@ public class MonitorConfiguration extends javax.swing.JFrame {
         jLabelPort.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabelPort.setText("Port:");
 
-        jTextFieldPort.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jTextFieldPort.setMinimumSize(new java.awt.Dimension(75, 23));
-        jTextFieldPort.setPreferredSize(new java.awt.Dimension(75, 23));
-
-        jTextFieldHeartBeatThreshold.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jTextFieldHeartBeatThreshold.setMinimumSize(new java.awt.Dimension(75, 23));
-        jTextFieldHeartBeatThreshold.setPreferredSize(new java.awt.Dimension(75, 23));
-
         jTextFieldLBHost.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jTextFieldLBHost.setMinimumSize(new java.awt.Dimension(75, 23));
         jTextFieldLBHost.setPreferredSize(new java.awt.Dimension(75, 23));
-
-        jTextFieldLBPort.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jTextFieldLBPort.setMinimumSize(new java.awt.Dimension(75, 23));
-        jTextFieldLBPort.setPreferredSize(new java.awt.Dimension(75, 23));
+        jTextFieldLBHost.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextFieldLBHostFocusGained(evt);
+            }
+        });
 
         jLabelLBHost.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabelLBHost.setText("Load Balancer Hostname*:");
+        jLabelLBHost.setText("Load Balancer Hostname:");
 
-        jLabelHeartBeatTH.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabelHeartBeatTH.setText("Heartbeat Threshold:");
+        jLabelHeartBeatTh.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabelHeartBeatTh.setText("Heartbeat Threshold (ms):");
 
         jLabelLBPort.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabelLBPort.setText("Load Balancer Port*:");
-
-        jLabelInfo.setText("* If Load Balancer is Already Running");
+        jLabelLBPort.setText("Load Balancer Port:");
 
         jButtonStart.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButtonStart.setText("Start Monitor");
@@ -96,34 +89,35 @@ public class MonitorConfiguration extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(28, Short.MAX_VALUE)
+                .addContainerGap(30, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jButtonEnd)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabelTitle)
+                        .addGap(123, 123, 123))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabelPort)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextFieldPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabelTitle)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabelHeartBeatTH)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextFieldHeartBeatThreshold, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabelLBPort)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextFieldLBPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jSpinnerLBPort, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabelLBHost)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextFieldLBHost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabelInfo))
-                        .addGap(123, 123, 123))))
+                                .addComponent(jTextFieldLBHost, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelPort)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelHeartBeatTh)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jSpinnerHeartbeatTh, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(113, 113, 113))))
             .addGroup(layout.createSequentialGroup()
-                .addGap(149, 149, 149)
+                .addGap(150, 150, 150)
                 .addComponent(jButtonStart)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
@@ -137,36 +131,54 @@ public class MonitorConfiguration extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelPort)
-                    .addComponent(jTextFieldPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldHeartBeatThreshold, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelHeartBeatTH))
-                .addGap(13, 13, 13)
+                    .addComponent(jLabelHeartBeatTh)
+                    .addComponent(jSpinnerHeartbeatTh, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldLBHost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelLBHost))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldLBPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelLBPort))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelInfo)
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelLBPort)
+                    .addComponent(jSpinnerLBPort, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
                 .addComponent(jButtonStart)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void initDefaults(){
+        jSpinnerPort.setModel(new SpinnerNumberModel(DefaultConfigs.M_PORT, 1, 65535, 1));
+        jSpinnerLBPort.setModel(new SpinnerNumberModel(DefaultConfigs.LB_PORT, 1, 65535, 1));
+        jSpinnerHeartbeatTh.setModel(new SpinnerNumberModel(DefaultConfigs.HEARTBEAT_THRESHOLD, 1, Integer.MAX_VALUE, 1));
+        jTextFieldLBHost.setText(DefaultConfigs.HOSTNAME);
+    }
+    
     private void jButtonEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEndActionPerformed
-        // TODO add your handling code here:
+        System.exit(0);
     }//GEN-LAST:event_jButtonEndActionPerformed
 
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
-        // TODO add your handling code here:
+        String hostname = jTextFieldLBHost.getText();
+        if(hostname.isBlank()){
+            jTextFieldLBHost.setBackground(Color.red);
+            return;
+        }
+        int port = (int)jSpinnerPort.getValue();
+        int lbPort = (int)jSpinnerLBPort.getValue();
+        int threshold = (int)jSpinnerHeartbeatTh.getValue();
+        this.setVisible(false);
+        new Monitor_GUI(port, hostname, lbPort, threshold).setVisible(true);
     }//GEN-LAST:event_jButtonStartActionPerformed
+
+    private void jTextFieldLBHostFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldLBHostFocusGained
+        jTextFieldLBHost.setBackground(SystemColor.text);
+    }//GEN-LAST:event_jTextFieldLBHostFocusGained
 
     /**
      * @param args the command line arguments
@@ -196,25 +208,22 @@ public class MonitorConfiguration extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MonitorConfiguration().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new MonitorConfiguration().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEnd;
     private javax.swing.JButton jButtonStart;
-    private javax.swing.JLabel jLabelHeartBeatTH;
-    private javax.swing.JLabel jLabelInfo;
+    private javax.swing.JLabel jLabelHeartBeatTh;
     private javax.swing.JLabel jLabelLBHost;
     private javax.swing.JLabel jLabelLBPort;
     private javax.swing.JLabel jLabelPort;
     private javax.swing.JLabel jLabelTitle;
-    private javax.swing.JTextField jTextFieldHeartBeatThreshold;
+    private javax.swing.JSpinner jSpinnerHeartbeatTh;
+    private javax.swing.JSpinner jSpinnerLBPort;
+    private javax.swing.JSpinner jSpinnerPort;
     private javax.swing.JTextField jTextFieldLBHost;
-    private javax.swing.JTextField jTextFieldLBPort;
-    private javax.swing.JTextField jTextFieldPort;
     // End of variables declaration//GEN-END:variables
 }
