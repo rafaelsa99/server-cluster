@@ -1,38 +1,43 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Client;
 
 import Communication.CClient;
 import Communication.Message;
 import Communication.MessageCodes;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author omp
+ * Client graphical interface.
+ * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */
 public class Client_GUI extends javax.swing.JFrame {
 
+    /** Client to receive the reply messages. */
     private Client client;
+    /** Communication client. */
     private CClient cclient;
-    private ArrayList<Request> requests;
-    private HashMap<Integer, Integer> assPendingRequest;
-        
+    /** List of the requests. */
+    private final List<Request> requests;
+    /** Request counter. */
+    private static int REQUEST_COUNTER;
+    
     /**
-     * Creates new form GUI_Client
+     * Creates new form GUI_Client.
+     * @param clientID client id
+     * @param hostname load balancer host name
+     * @param lbPort load balancer port
      */
     public Client_GUI(int clientID, String hostname, int lbPort) {
         initComponents();
+        this.cclient = new CClient(hostname, lbPort);
+        this.cclient.connectToServer();
+        REQUEST_COUNTER = 1000 * clientID;
+        this.requests = new ArrayList<>();
         //this.client = client;
-        this.requests = new ArrayList<Request>();
-        this.assPendingRequest = new HashMap<Integer, Integer>();
     }
        /**
      * This method is called from within the constructor to initialize the form.
@@ -129,9 +134,6 @@ public class Client_GUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonEnd))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(67, 67, 67)
                         .addComponent(jLabelIterations)
@@ -140,9 +142,13 @@ public class Client_GUI extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jSpinnerInteractionsCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonRequest))
-                            .addComponent(jLabelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 44, Short.MAX_VALUE))
+                                .addComponent(jButtonRequest)
+                                .addGap(0, 44, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButtonEnd)
+                                .addGap(8, 8, 8))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
@@ -152,10 +158,13 @@ public class Client_GUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonEnd)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(39, 39, 39))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButtonEnd)
+                        .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinnerInteractionsCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelIterations)

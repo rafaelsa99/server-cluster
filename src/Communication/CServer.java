@@ -9,7 +9,7 @@ import java.net.Socket;
  * Communication Server.
  * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */
-public class CServer extends Thread{
+public class CServer{
 
     /** Port of the server. */
     private final int portNumber;
@@ -30,7 +30,10 @@ public class CServer extends Thread{
     public void openServer() {
         try {
             this.serverSocket = new ServerSocket(this.portNumber);
-        } catch(IOException e){System.out.println(e);}
+        } catch(IOException e){
+            System.out.println(e);
+            System.exit(1);
+        }
     }
     
     /**

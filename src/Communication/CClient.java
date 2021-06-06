@@ -42,6 +42,7 @@ public class CClient {
             in = new ObjectInputStream (socket.getInputStream ());
         } catch(IOException e){
             System.out.println("Couldn't get I/O for the connection to " + hostName);
+            System.exit(1);
         }
     }
     
@@ -59,15 +60,25 @@ public class CClient {
     }
     
     /**
-     * Send message. 
-     * Connection is established and the message is sent.
+     * Send a message. 
      * @param obj object to be sent
-     * @return reply message received
      */
-    public Message sendMessageAndWaitForReply(Object obj){
-        Message reply = null;
+    public void sendMessage(Object obj){
         try{
             out.writeObject(obj);
+        } catch (IOException e) {
+            System.out.println("Couldn't get I/O for the connection to " + hostName);
+        }
+        
+    }
+    
+    /**
+     * Receive a message.
+     * @return message received
+     */
+    public Message receiveMessage(){
+        Message reply = null;
+        try{
             reply = (Message)in.readObject();
         } catch (IOException e) {
             System.out.println("Couldn't get I/O for the connection to " + hostName);

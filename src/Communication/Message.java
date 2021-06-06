@@ -178,34 +178,66 @@ public class Message implements Serializable{
         this.valueNa = 0;
     }
     
+    /**
+     * Get client id.
+     * @return client id
+     */
     public int getClientId() {
         return clientId;
     }
 
+    /**
+     * Get request id.
+     * @return request id
+     */
     public int getRequestId() {
         return requestId;
     }
 
+    /**
+     * Get server id.
+     * @return server id
+     */
     public int getServerId() {
         return serverId;
     }
 
+    /**
+     * Get message code.
+     * @return message code
+     */
     public int getMessageCode() {
         return messageCode;
     }
 
+    /**
+     * Get number of iterations.
+     * @return iterations number
+     */
     public int getIterations() {
         return iterations;
     }
 
+    /**
+     * Get Avogrado Number.
+     * @return avogrado number
+     */
     public double getValueNa() {
         return valueNa;
     }
 
+    /**
+     * Get host name.
+     * @return host name
+     */
     public String getHostname() {
         return hostname;
     }
 
+    /**
+     * Get port number.
+     * @return port
+     */
     public int getPort() {
         return port;
     }
