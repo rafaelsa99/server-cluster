@@ -32,11 +32,8 @@ public class Client extends Thread{
     @Override
     public void run() {
         Message msg;
-        while(cclient.isConnected()){            
-            msg = cclient.receiveMessage();
-            if(msg != null)
-                new ProcessingThread(msg).start();
-        }
+        while((msg = cclient.receiveMessage()) != null)         
+           new ProcessingThread(msg).start();
     } 
     
     /**

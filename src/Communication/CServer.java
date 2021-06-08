@@ -36,10 +36,6 @@ public class CServer{
         }
     }
     
-    public boolean isConnected(){
-        return serverSocket.isBound();
-    }
-    
     /**
      * Await new client.
      * @return socket return from the client accept

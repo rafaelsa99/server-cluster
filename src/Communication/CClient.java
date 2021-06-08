@@ -38,6 +38,13 @@ public class CClient {
      */
     public CClient(Socket socket){
         this.socket = socket;
+        try{
+            out = new ObjectOutputStream (this.socket.getOutputStream ());
+            in = new ObjectInputStream (this.socket.getInputStream ());
+        } catch(IOException e){
+            System.out.println("Couldn't get I/O for the connection to " + socket.getInetAddress().getHostName());
+            System.exit(1);
+        }
     }
     
     /**
@@ -46,6 +53,8 @@ public class CClient {
     public void connectToServer() {
         try {
             socket = new Socket(hostName, portNumber);
+            out = new ObjectOutputStream (this.socket.getOutputStream ());
+            in = new ObjectInputStream (this.socket.getInputStream ());
         } catch(IOException e){
             System.out.println("Couldn't get I/O for the connection to " + hostName);
             System.exit(1);
@@ -60,8 +69,11 @@ public class CClient {
      */
     public static boolean testConnection(String hn, int p){
         try {
-            Socket echo = new Socket(hn, p);
-            echo.close();
+            Socket test = new Socket(hn, p);
+            ObjectOutputStream out = new ObjectOutputStream (test.getOutputStream ());
+            out.writeObject(new Message(MessageCodes.TEST_MESSAGE));
+            out.close();
+            test.close();
         } catch(IOException e){
             return false;
         }
@@ -74,19 +86,13 @@ public class CClient {
     public void closeConnection(){
         if(socket.isConnected()){
             try {
-                if(in != null)
-                    in.close();
-                if(out != null)
-                    out.close();
+                out.close();
+                in.close();
                 socket.close();
             } catch (IOException ex) {
                 System.out.println(ex.toString());
             }
         }
-    }
-    
-    public boolean isConnected(){
-        return socket.isConnected();
     }
     
     /**
@@ -95,16 +101,10 @@ public class CClient {
      */
     public void sendMessage(Object obj){
         try{
-            if(out == null){
-                System.out.println("output stream");
-                out = new ObjectOutputStream (this.socket.getOutputStream ());
-                System.out.println("criei output stream");
-            }
             out.writeObject(obj);
         } catch (IOException e) {
-            System.out.println("output: Couldn't get I/O for the connection to " + socket.getInetAddress().getHostName());
+            System.out.println(e.toString());
         }
-        
     }
     
     /**
@@ -114,14 +114,8 @@ public class CClient {
     public Message receiveMessage(){
         Message reply = null;
         try{
-            if(in == null){
-                System.out.println("input stream");
-                in = new ObjectInputStream (this.socket.getInputStream ());
-                System.out.println("criei input stream");
-            }
             reply = (Message)in.readObject();
         } catch (IOException e) {
-            System.out.println("input: Couldn't get I/O for the connection to " + socket.getInetAddress().getHostName());
         } catch (ClassNotFoundException ex) {
             System.out.println(ex.toString());
         }

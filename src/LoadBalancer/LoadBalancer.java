@@ -75,16 +75,13 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
     public void run() {
         Socket socket;
         cServer.openServer();
-        while(cServer.isConnected()){
-            socket = cServer.awaitClient();
-            if(socket != null)
-                new SocketCommunicationsThread(socket).start();
-        }
+        while((socket = cServer.awaitClient()) != null)
+            new SocketCommunicationsThread(socket).start();
     }
 
     @Override
     public synchronized void newRequest(Message request) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("New Request!");
     }
 
     @Override
@@ -100,23 +97,6 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
     @Override
     public synchronized void serversInfo(HashMap<Integer, Integer> serversOccupation) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public synchronized void newConnection(CClient cc, Message msg) {
-        switch (msg.getMessageCode()) {
-            case MessageCodes.REG_CLIENT:
-                cClients.put(msg.getClientId(), cc);
-                break;
-            case MessageCodes.REG_SERVER:
-                cServers.put(msg.getServerId(), cc);
-                break;
-            case MessageCodes.REG_INFOR:
-                cMonitor = cc;
-                break;
-            default:
-                cc.closeConnection();
-        }
     }
 
     /**
@@ -141,15 +121,24 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
         @Override
         public void run() {
             CClient cc = new CClient(socket);
-            Message msg = cc.receiveMessage();
-            if(msg != null){
-                newConnection(cc, msg);
-                while((msg = cc.receiveMessage()) != null){
-                    switch(msg.getMessageCode()){
-                        case MessageCodes.REQUEST:
-                            newRequest(msg);
-                            break;
-                    }
+            Message msg;
+            while((msg = cc.receiveMessage()) != null){
+                switch(msg.getMessageCode()){
+                    case MessageCodes.REG_CLIENT:
+                        cClients.put(msg.getClientId(), cc);
+                        break;
+                    case MessageCodes.REG_SERVER:
+                        cServers.put(msg.getServerId(), cc);
+                        break;
+                    case MessageCodes.REG_INFOR:
+                        cMonitor = cc;
+                        break;
+                    case MessageCodes.REQUEST:
+                        newRequest(msg);
+                        break;
+                    case MessageCodes.TEST_MESSAGE:
+                        cc.closeConnection();
+                        return;
                 }
             }
         }        

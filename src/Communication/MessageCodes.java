@@ -44,9 +44,9 @@ public class MessageCodes {
      */
     public static final int ASSIGNMENT = 9;
     /**
-     * Code for a empty reply message.
+     * Code for a message to test the connection.
      */
-    public static final int EMPTY_REPLY = 10;
+    public static final int TEST_MESSAGE = 10;
     /**
      * Register new client code.
      */
