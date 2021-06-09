@@ -98,13 +98,16 @@ public class CClient {
     /**
      * Send a message. 
      * @param obj object to be sent
+     * @return true if message was sent, false otherwise
      */
-    public void sendMessage(Object obj){
+    public boolean sendMessage(Object obj){
         try{
             out.writeObject(obj);
         } catch (IOException e) {
             System.out.println(e.toString());
+            return false;
         }
+        return true;
     }
     
     /**

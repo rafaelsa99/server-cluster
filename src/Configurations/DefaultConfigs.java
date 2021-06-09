@@ -13,9 +13,9 @@ public class DefaultConfigs {
     /** Default Monitor Port. */
     public static final int M_PORT = 5001;
     /** Default Heartbeat Threshold (in milliseconds). */
-    public static final int HEARTBEAT_THRESHOLD = 30000;
+    public static final int HEARTBEAT_THRESHOLD = 10000;
     /** Default Heartbeat Timeout (in milliseconds). */
-    public static final int HEARTBEAT_TIMEOUT = 10000;
+    public static final int HEARTBEAT_TIMEOUT = 1000;
     /** Default Iteration Timeout (in milliseconds). */
     public static final int ITERATION_TIMEOUT = 1000;
     /** Default Queue Size. */

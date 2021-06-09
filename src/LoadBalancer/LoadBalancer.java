@@ -32,6 +32,7 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
      * @param mPort monitor port
      */
     public LoadBalancer(int port, String mHN, int mPort) {
+        super("Load Balancer");
         this.cServer = new CServer(port);
         this.cServers = new HashMap<>();
         this.cClients = new HashMap<>();
@@ -79,9 +80,16 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
             new SocketCommunicationsThread(socket).start();
     }
 
+    /**
+     * New request received from a client.
+     * @param request request message received
+     */
     @Override
     public synchronized void newRequest(Message request) {
-        System.out.println("New Request!");
+        //Envia mensagem ao monitor
+        //Aguarda receber informação sobre o estado de todos os servidores
+        int serverId = 1; //GetFreeServer()
+        cServers.get(serverId).sendMessage(request);
     }
 
     @Override
@@ -99,6 +107,14 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Get the server handling less requests.
+     * @return server id
+     */
+    private int getFreeServer(){
+        return 0;
+    }
+    
     /**
      * Thread for handle the communications of a given socket.
      */

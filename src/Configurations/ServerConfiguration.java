@@ -278,7 +278,7 @@ public class ServerConfiguration extends javax.swing.JFrame {
             return;
         }
         this.setVisible(false);
-        new Server_GUI(lbhostname, lbPort, mhostname, mPort, heartbeat, iteration, queue, maxReq).setVisible(true);
+        new Server_GUI(serverID, lbhostname, lbPort, mhostname, mPort, heartbeat, iteration, queue, maxReq).setVisible(true);
     }//GEN-LAST:event_jButtonStartActionPerformed
 
     /**

@@ -18,10 +18,12 @@ public class Client extends Thread{
 
     /**
      * Client instantiation.
+     * @param clientId client id
      * @param cclient communication client
      * @param clientGUI client GUI
      */
-    public Client(CClient cclient, Client_GUI clientGUI) {
+    public Client(int clientId, CClient cclient, Client_GUI clientGUI) {
+        super("Client " + clientId);
         this.cclient = cclient;
         this.clientGUI = clientGUI;
     }

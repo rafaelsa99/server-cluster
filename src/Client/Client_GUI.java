@@ -35,8 +35,9 @@ public class Client_GUI extends javax.swing.JFrame {
         jSpinnerInteractionsCount.setModel(new SpinnerNumberModel(DefaultConfigs.NUMBER_ITERATIONS, 1, Integer.MAX_VALUE, 1));
         REQUEST_COUNTER = 1000 * clientID;
         this.clientId = clientID;
+        labelChange();
         initConnection(hostname, lbPort);
-        this.client = new Client(cclient, this);
+        this.client = new Client(clientID, cclient, this);
         client.start();
     }
     /**
@@ -213,6 +214,13 @@ public class Client_GUI extends javax.swing.JFrame {
         cclient.sendMessage(msg);
     }
 
+    /**
+     * Change GUI title label.
+     */
+    private void labelChange(){
+        jLabelTitle.setText("Client " + this.clientId);
+    }
+    
     /**
      * Add new pending request to GUI.
      * @param request new request

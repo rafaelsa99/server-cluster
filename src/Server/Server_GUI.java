@@ -1,22 +1,40 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Server;
 
+import Communication.CClient;
+import Communication.Message;
+import Communication.MessageCodes;
+
 /**
- *
- * @author omp
+ * Server graphical interface.
+ * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */
 public class Server_GUI extends javax.swing.JFrame {
 
+    private final Server server;
+    private final int serverId;
+    
     /**
-     * Creates new form Server_GUI
+     * Creates new form Server_GUI.
+     * @param serverId server id
+     * @param lbHostname load balancer host name
+     * @param lbPort load balancer port
+     * @param mHostname monitor host name
+     * @param mPort monitor port
+     * @param heartbeatTimeout heartbeat timeout, in milliseconds
+     * @param iterationTimeout iteration timeout, in milliseconds
+     * @param queueSize queue size
+     * @param maxRequests maximum number of simultaneous requests
      */
-    public Server_GUI(String lbHostname, int lbPort, String mHostname, int mPort,
-            int heartbeatTimeout, int iterationTimeout, int queueSize, int maxRequests) {
+    public Server_GUI(int serverId, String lbHostname, int lbPort, String mHostname, int mPort,
+                      int heartbeatTimeout, int iterationTimeout, int queueSize, int maxRequests) {
         initComponents();
+        this.serverId = serverId;
+        labelChange();
+        CClient cLB = initConnection(lbHostname, lbPort);
+        CClient cM = initConnection(mHostname, mPort);
+        new Heartbeat(cM, heartbeatTimeout, serverId).start();
+        this.server = new Server(cLB, cM, this, serverId, iterationTimeout, queueSize, maxRequests);
     }
 
     /**
@@ -108,10 +126,31 @@ public class Server_GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEndActionPerformed
-        // TODO add your handling code here:
+        server.closeComChannels();
+        System.exit(0);
     }//GEN-LAST:event_jButtonEndActionPerformed
 
+    /**
+     * Initialize a communication client channel to a server.
+     * @param hostname server host name
+     * @param port server port
+     * @return communication client reference
+     */
+    private CClient initConnection(String hostname, int port){
+        CClient cclient = new CClient(hostname, port);
+        cclient.connectToServer();
+        Message msg = new Message(true, this.serverId, MessageCodes.REG_SERVER);
+        cclient.sendMessage(msg);
+        return cclient;
+    }
 
+    /**
+     * Change GUI title label.
+     */
+    private void labelChange(){
+        jLabelTitle.setText("Server " + this.serverId);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEnd;
     private javax.swing.JLabel jLabelTitle;

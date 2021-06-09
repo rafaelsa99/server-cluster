@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- *
+ * Interface for the load balancer functions.
  * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */
 interface I_LoadBalancer {
