@@ -2,6 +2,8 @@
 package Communication;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Serializable class representing the message to be sent between the processes.
@@ -10,7 +12,7 @@ import java.io.Serializable;
 public class Message implements Serializable{
     
     /** Client ID. */
-    private  int clientId;
+    private int clientId;
     /** Request ID. */
     private int requestId;
     /** Server ID. */
@@ -21,6 +23,10 @@ public class Message implements Serializable{
     private int iterations;
     /** Value of NA, Avogadro Constant. */
     private String valueNa;
+    /** Requests being processed by a server. */
+    private List<Message> serverRequests;
+    /** Number of requests being processed by each server. */
+    private Map<Integer, Integer> serverCounters;
 
     /**
      * Constructor for the request message / current iteration on a request update.
@@ -41,6 +47,8 @@ public class Message implements Serializable{
         this.requestId = requestId;
         this.messageCode = messageCode;
         this.iterations = iterations;
+        this.serverRequests = null;
+        this.serverCounters = null;
     }
 
     /**
@@ -59,6 +67,8 @@ public class Message implements Serializable{
         this.messageCode = messageCode;
         this.iterations = iterations;
         this.valueNa = valueNa;
+        this.serverRequests = null;
+        this.serverCounters = null;
     }
 
     /**
@@ -76,6 +86,8 @@ public class Message implements Serializable{
         this.messageCode = messageCode;
         this.iterations = iterations;
         this.valueNa = "0";
+        this.serverRequests = null;
+        this.serverCounters = null;
     }
 
     /**
@@ -96,6 +108,8 @@ public class Message implements Serializable{
         this.requestId = 0;
         this.iterations = 0;
         this.valueNa = "0";
+        this.serverRequests = null;
+        this.serverCounters = null;
     }
 
     /**
@@ -111,22 +125,8 @@ public class Message implements Serializable{
         this.clientId = 0;
         this.iterations = 0;
         this.valueNa = "0";
-    }
-
-    /**
-     * Constructor for the .
-     * @param serverId server id
-     * @param requestId request id
-     * @param messageCode message code
-     * @param iterations current iteration
-     */
-    public Message(int serverId, int requestId, int messageCode, int iterations) {
-        this.serverId = serverId;
-        this.requestId = requestId;
-        this.messageCode = messageCode;
-        this.iterations = iterations;
-        this.clientId = 0;
-        this.valueNa = "0";
+        this.serverRequests = null;
+        this.serverCounters = null;
     }
 
     /**
@@ -140,6 +140,25 @@ public class Message implements Serializable{
         this.requestId = 0;
         this.iterations = 0;
         this.valueNa = "0";
+        this.serverRequests = null;
+        this.serverCounters = null;
+    }
+    
+    /**
+     * Constructor for sending the server counters for a request.
+     * @param messageCode message code
+     * @param requestId request id
+     * @param counters servers counters
+     */
+    public Message(int messageCode, int requestId, Map<Integer, Integer> counters) {
+        this.messageCode = messageCode;
+        this.clientId = 0;
+        this.serverId = 0;
+        this.requestId = requestId;
+        this.iterations = 0;
+        this.valueNa = "0";
+        this.serverRequests = null;
+        this.serverCounters = counters;
     }
     
     /**
@@ -237,4 +256,38 @@ public class Message implements Serializable{
     public void setValueNa(String valueNa) {
         this.valueNa = valueNa;
     }
+
+    /**
+     * Get the requests being processed by a server.
+     * @return list of requests
+     */
+    public List<Message> getServerRequests() {
+        return serverRequests;
+    }
+
+    /**
+     * Set the requests being processed by a server.
+     * @param serverRequests list of requests 
+     */
+    public void setServerRequests(List<Message> serverRequests) {
+        this.serverRequests = serverRequests;
+    }
+
+    /**
+     * Get the number of requests being processed by the servers.
+     * @return map with the serverIds - Counters
+     */
+    public Map<Integer, Integer> getServerCounters() {
+        return serverCounters;
+    }
+
+    /**
+     * Set the number of requests being processed by the servers.
+     * @param serverCounters map with the serverIds - Counters
+     */
+    public void setServerCounters(Map<Integer, Integer> serverCounters) {
+        this.serverCounters = serverCounters;
+    }
+    
+    
 }

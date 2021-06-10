@@ -24,13 +24,26 @@ public class Monitor extends Thread implements I_Monitor{
     private final int heartbeatThreshold;
     /** Servers Information. */
     private final Map<Integer, ServerInfo> servers;
+    /** Servers Requests Counters. */
+    private final Map<Integer, Integer> serversCounters;
+    /** Requests waiting to be assigned to a server. */
+    private final Map<Integer, Message> waitingRequests;
 
+    /**
+     * Monitor instantiation.
+     * @param port server socket port
+     * @param hostname load balancer host name
+     * @param lbPort load balancer port
+     * @param heartbeatThreshold heartbeat threshold
+     */
     public Monitor(int port, String hostname, int lbPort, int heartbeatThreshold) {
         super("Monitor");
         this.heartbeatThreshold = heartbeatThreshold;
         this.cServer = new CServer(port);
         initLBConnection(hostname, lbPort);
         this.servers = new HashMap<>();
+        this.serversCounters = new HashMap<>();
+        this.waitingRequests = new HashMap<>();
     }
     
     /**
@@ -75,23 +88,76 @@ public class Monitor extends Thread implements I_Monitor{
     }
 
     @Override
-    public void serverHeartbeat(int serverId) {
+    public synchronized void serverHeartbeat(int serverId) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * New request received on Load Balancer.
+     * Send the servers counters to the load balancer for the assignment decision.
+     * @param request request message received
+     */
     @Override
-    public void newLBRequest(Message request) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public synchronized void newLBRequest(Message request) {
+        //----------> UPDATE GUI
+        waitingRequests.put(request.getRequestId(), request);
+        Message msg = new Message(MessageCodes.SERVERS_COUNTERS, request.getRequestId(), serversCounters);
+        cLB.sendMessage(msg);
     }
 
+    /**
+     * Reply message for a given request.
+     * @param reply reply message
+     */
     @Override
-    public void newLBReply(Message reply) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public synchronized void newLBReply(Message reply) {
+        serversCounters.replace(reply.getServerId(), serversCounters.get(reply.getServerId()) + 1);
+        servers.get(reply.getServerId()).removeRequest(reply.getRequestId());
+        //----------> UPDATE GUI
     }
 
+    /**
+     * Update the current iteration of a request being processed by a server.
+     * @param serverId server id
+     * @param requestId request id
+     * @param currentIter current iteration
+     */
     @Override
-    public void serverIterationsUpdate(int serverId, int requestId, int currentIter) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public synchronized void serverIterationsUpdate(int serverId, int requestId, int currentIter) {
+        //----------> UPDATE GUI
+    }
+
+    /**
+     * Request assigned to a server. 
+     * @param requestId request id
+     * @param serverId server id
+     */
+    @Override
+    public synchronized void requestAssigned(int requestId, int serverId) {
+        Message request = waitingRequests.remove(requestId);
+        servers.get(serverId).addRequest(request);
+        serversCounters.replace(serverId, serversCounters.get(serverId) + 1);
+        //----------> UPDATE GUI
+    }
+
+    /**
+     * Register a new server connected to the monitor.
+     * @param serverId server id
+     * @param cc communication client
+     */
+    @Override
+    public synchronized void newServer(int serverId, CClient cc) {
+        servers.put(serverId, new ServerInfo(serverId, cc));
+        serversCounters.put(serverId, 0);
+    }
+
+    /**
+     * Register the load balancer.
+     * @param cc communication client to the load balancer
+     */
+    @Override
+    public synchronized void loadBalancerUp(CClient cc) {
+        cLB = cc;
     }
     
     /**
@@ -119,13 +185,23 @@ public class Monitor extends Thread implements I_Monitor{
             while((msg = cc.receiveMessage()) != null){
                 switch(msg.getMessageCode()){
                     case MessageCodes.REG_LB_M:
-                        cLB = cc;
+                        loadBalancerUp(cc);
                         break;
                     case MessageCodes.REG_SERVER:
-                        servers.put(msg.getServerId(), new ServerInfo(msg.getServerId(), cc));
+                        newServer(msg.getServerId(), cc);
                         break;
                     case MessageCodes.REQUEST:
-                        //newRequest(msg);
+                        newLBRequest(msg);
+                        break;
+                    case MessageCodes.ASSIGNMENT:
+                        requestAssigned(msg.getRequestId(), msg.getServerId());
+                        break;
+                    case MessageCodes.CUR_ITER:
+                        serverIterationsUpdate(msg.getServerId(), msg.getRequestId(), msg.getIterations());
+                        break;
+                    case MessageCodes.REPLY:
+                    case MessageCodes.REJECTION:
+                        newLBReply(msg);
                         break;
                     case MessageCodes.TEST_MESSAGE:
                         cc.closeConnection();
