@@ -35,6 +35,7 @@ public class Server_GUI extends javax.swing.JFrame {
         CClient cM = initConnection(mHostname, mPort);
         new Heartbeat(cM, heartbeatTimeout, serverId).start();
         this.server = new Server(cLB, cM, this, serverId, iterationTimeout, queueSize, maxRequests);
+        this.server.start();
     }
 
     /**

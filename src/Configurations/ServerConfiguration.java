@@ -115,10 +115,10 @@ public class ServerConfiguration extends javax.swing.JFrame {
         jLabelMaxRequests.setText("Max Nº of Requests:");
 
         jLabelHeartbeatTimeout.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabelHeartbeatTimeout.setText("Heartbeat Timeout:");
+        jLabelHeartbeatTimeout.setText("Heartbeat Timeout (ms):");
 
         jLabelIterationTime.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabelIterationTime.setText("Iteration Timeout:");
+        jLabelIterationTime.setText("Iteration Timeout (ms):");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

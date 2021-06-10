@@ -10,21 +10,21 @@ import java.io.Serializable;
 public class Message implements Serializable{
     
     /** Client ID. */
-    private final int clientId;
+    private  int clientId;
     /** Request ID. */
-    private final int requestId;
+    private int requestId;
     /** Server ID. */
-    private final int serverId;
+    private int serverId;
     /** Message code. */
-    private final int messageCode;
+    private int messageCode;
     /** Number of iterations. */
-    private final int iterations;
+    private int iterations;
     /** Value of NA, Avogadro Constant. */
-    private final String valueNa;
+    private String valueNa;
     /** Host name. */
-    private final String hostname;
+    private String hostname;
     /** Port. */
-    private final int port;
+    private int port;
 
     /**
      * Constructor for the request message / current iteration on a request update.
@@ -240,5 +240,69 @@ public class Message implements Serializable{
      */
     public int getPort() {
         return port;
+    }
+
+    /**
+     * Set client ID.
+     * @param clientId client id
+     */
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
+    }
+
+    /**
+     * Set request ID.
+     * @param requestId request id
+     */
+    public void setRequestId(int requestId) {
+        this.requestId = requestId;
+    }
+
+    /**
+     * Set server ID.
+     * @param serverId serer id
+     */
+    public void setServerId(int serverId) {
+        this.serverId = serverId;
+    }
+
+    /**
+     * Set message code.
+     * @param messageCode message code
+     */
+    public void setMessageCode(int messageCode) {
+        this.messageCode = messageCode;
+    }
+
+    /**
+     * Set number of iterations.
+     * @param iterations iterations number
+     */
+    public void setIterations(int iterations) {
+        this.iterations = iterations;
+    }
+
+    /**
+     * Set Avogrado Number.
+     * @param valueNa Avogrado Number
+     */
+    public void setValueNa(String valueNa) {
+        this.valueNa = valueNa;
+    }
+
+    /**
+     * Set host name.
+     * @param hostname host name
+     */
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
+
+    /**
+     * Set port number.
+     * @param port port number
+     */
+    public void setPort(int port) {
+        this.port = port;
     }
 }
