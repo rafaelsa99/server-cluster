@@ -31,6 +31,7 @@
             <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/Client/Client.java</file>
             <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/Client/Request.java</file>
             <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/Common/FIFO.java</file>
+            <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/Monitor/I_Monitor.java</file>
             <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/LoadBalancer/LoadBalancer.java</file>
             <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/ControlPanel/Control.java</file>
             <file>file:/home/rafael/Desktop/TP3_AS/server-cluster/src/Client/package-info.java</file>

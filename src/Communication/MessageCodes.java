@@ -36,9 +36,9 @@ public class MessageCodes {
      */
     public static final int DOWN = 7;
     /**
-     * Load Balancer / Monitor information register code.
+     * Load Balancer / Monitor register code.
      */
-    public static final int REG_INFOR = 8;
+    public static final int REG_LB_M = 8;
     /**
      * Code for assigning a server to a request.
      */

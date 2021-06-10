@@ -21,10 +21,6 @@ public class Message implements Serializable{
     private int iterations;
     /** Value of NA, Avogadro Constant. */
     private String valueNa;
-    /** Host name. */
-    private String hostname;
-    /** Port. */
-    private int port;
 
     /**
      * Constructor for the request message / current iteration on a request update.
@@ -45,9 +41,6 @@ public class Message implements Serializable{
         this.requestId = requestId;
         this.messageCode = messageCode;
         this.iterations = iterations;
-        this.valueNa = "0";
-        this.hostname = "";
-        this.port = 0;
     }
 
     /**
@@ -66,8 +59,6 @@ public class Message implements Serializable{
         this.messageCode = messageCode;
         this.iterations = iterations;
         this.valueNa = valueNa;
-        this.hostname = "";
-        this.port = 0;
     }
 
     /**
@@ -85,8 +76,6 @@ public class Message implements Serializable{
         this.messageCode = messageCode;
         this.iterations = iterations;
         this.valueNa = "0";
-        this.hostname = "";
-        this.port = 0;
     }
 
     /**
@@ -107,8 +96,6 @@ public class Message implements Serializable{
         this.requestId = 0;
         this.iterations = 0;
         this.valueNa = "0";
-        this.hostname = "";
-        this.port = 0;
     }
 
     /**
@@ -120,12 +107,10 @@ public class Message implements Serializable{
     public Message(int serverId, int messageCode, int requestId) {
         this.serverId = serverId;
         this.messageCode = messageCode;
-        this.port = 0;
         this.requestId = requestId;
         this.clientId = 0;
         this.iterations = 0;
         this.valueNa = "0";
-        this.hostname = "";
     }
 
     /**
@@ -142,35 +127,14 @@ public class Message implements Serializable{
         this.iterations = iterations;
         this.clientId = 0;
         this.valueNa = "0";
-        this.hostname = "";
-        this.port = 0;
     }
 
     /**
-     * Constructor to register the information of the LB / M.
-     * @param messageCode message code
-     * @param hostname host name of the LB / M
-     * @param port port of the LB / M
-     */
-    public Message(int messageCode, String hostname, int port) {
-        this.messageCode = messageCode;
-        this.hostname = hostname;
-        this.port = port;
-        this.clientId = 0;
-        this.serverId = 0;
-        this.requestId = 0;
-        this.iterations = 0;
-        this.valueNa = "0";
-    }
-
-    /**
-     * Constructor for a empty message.
+     * Constructor for a empty message and to register the load balancer and monitor.
      * @param messageCode message code
      */
     public Message(int messageCode) {
         this.messageCode = messageCode;
-        this.hostname = "";
-        this.port = 0;
         this.clientId = 0;
         this.serverId = 0;
         this.requestId = 0;
@@ -227,22 +191,6 @@ public class Message implements Serializable{
     }
 
     /**
-     * Get host name.
-     * @return host name
-     */
-    public String getHostname() {
-        return hostname;
-    }
-
-    /**
-     * Get port number.
-     * @return port
-     */
-    public int getPort() {
-        return port;
-    }
-
-    /**
      * Set client ID.
      * @param clientId client id
      */
@@ -288,21 +236,5 @@ public class Message implements Serializable{
      */
     public void setValueNa(String valueNa) {
         this.valueNa = valueNa;
-    }
-
-    /**
-     * Set host name.
-     * @param hostname host name
-     */
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
-
-    /**
-     * Set port number.
-     * @param port port number
-     */
-    public void setPort(int port) {
-        this.port = port;
     }
 }

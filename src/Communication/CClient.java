@@ -100,7 +100,7 @@ public class CClient {
      * @param obj object to be sent
      * @return true if message was sent, false otherwise
      */
-    public boolean sendMessage(Object obj){
+    public synchronized boolean sendMessage(Object obj){
         try{
             out.writeObject(obj);
         } catch (IOException e) {
@@ -114,7 +114,7 @@ public class CClient {
      * Receive a message.
      * @return message received
      */
-    public Message receiveMessage(){
+    public synchronized Message receiveMessage(){
         Message reply = null;
         try{
             reply = (Message)in.readObject();

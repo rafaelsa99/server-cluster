@@ -5,7 +5,6 @@ import Communication.CClient;
 import Communication.CServer;
 import Communication.Message;
 import Communication.MessageCodes;
-import Configurations.DefaultConfigs;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
@@ -36,21 +35,21 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
         this.cServer = new CServer(port);
         this.cServers = new HashMap<>();
         this.cClients = new HashMap<>();
-        initMonitorConnection(mHN, mPort, port);
+        initMonitorConnection(mHN, mPort);
     }
 
     /**
-     * Check if monitor is up, and send information about the load balancer server port.
+     * Check if monitor is up, and if so, establish the connection.
      * @param hostname monitor host name
      * @param mPort monitor port
-     * @param lbPort load balancer port
      */
-    private void initMonitorConnection(String hostname, int mPort, int lbPort){
+    private void initMonitorConnection(String hostname, int mPort){
         if(CClient.testConnection(hostname, mPort)){
             cMonitor = new CClient(hostname, mPort);
             cMonitor.connectToServer();
-            Message msg = new Message(MessageCodes.REG_INFOR, DefaultConfigs.HOSTNAME, lbPort);
+            Message msg = new Message(MessageCodes.REG_LB_M);
             cMonitor.sendMessage(msg);
+            new ClientCommunicationsThread(cMonitor).start();
         }
     }
     
@@ -75,9 +74,12 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
     @Override
     public void run() {
         Socket socket;
+        CClient cc;
         cServer.openServer();
-        while((socket = cServer.awaitClient()) != null)
-            new SocketCommunicationsThread(socket).start();
+        while((socket = cServer.awaitClient()) != null){
+            cc = new CClient(socket);
+            new ClientCommunicationsThread(cc).start();
+        }
     }
 
     /**
@@ -116,27 +118,26 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
     }
     
     /**
-     * Thread for handle the communications of a given socket.
+     * Thread for handle the communications of a given client.
      */
-    class SocketCommunicationsThread extends Thread{
+    class ClientCommunicationsThread extends Thread{
         
-        /** Socket connected to the client. */
-        private final Socket socket;
+        /** Communication client. */
+        private final CClient cc;
 
         /**
-         * Socket communication thread instantiation.
-         * @param socket socket connected to the client
+         * Client communication thread instantiation.
+         * @param cc communication client
          */
-        public SocketCommunicationsThread(Socket socket) {
-            this.socket = socket;
+        public ClientCommunicationsThread(CClient cc) {
+            this.cc = cc;
         }
 
         /**
-         * Socket communication thread life cycle.
+         * Client communication thread life cycle.
          */
         @Override
         public void run() {
-            CClient cc = new CClient(socket);
             Message msg;
             while((msg = cc.receiveMessage()) != null){
                 switch(msg.getMessageCode()){
@@ -146,7 +147,7 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
                     case MessageCodes.REG_SERVER:
                         cServers.put(msg.getServerId(), cc);
                         break;
-                    case MessageCodes.REG_INFOR:
+                    case MessageCodes.REG_LB_M:
                         cMonitor = cc;
                         break;
                     case MessageCodes.REQUEST:
