@@ -1,7 +1,5 @@
 /**
-* This package contains the classes and methods to play the Monitor role.
-* Please read the requirements carefully.
-* 
+* This package contains the classes and methods to play the Monitor role. 
 **/
 
 package Monitor;

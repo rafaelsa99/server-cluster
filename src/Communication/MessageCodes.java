@@ -34,11 +34,11 @@ public class MessageCodes {
     /**
      * Server down code.
      */
-    public static final int DOWN = 7;
+    public static final int SERVER_DOWN = 7;
     /**
-     * Load Balancer / Monitor information register code.
+     * Load Balancer / Monitor register code.
      */
-    public static final int REG_INFOR = 8;
+    public static final int REG_LB_M = 8;
     /**
      * Code for assigning a server to a request.
      */
@@ -51,6 +51,10 @@ public class MessageCodes {
      * Register new client code.
      */
     public static final int REG_CLIENT = 11;
+    /**
+     * Code for sending the counters of requests of the servers.
+     */
+    public static final int SERVERS_COUNTERS = 12;
     
     /**
      * It can not be instantiated.

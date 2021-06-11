@@ -5,10 +5,10 @@ import Communication.CClient;
 import Communication.CServer;
 import Communication.Message;
 import Communication.MessageCodes;
-import Configurations.DefaultConfigs;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Load balancer server to receive and process messages.
@@ -21,9 +21,11 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
     /** Communication channel to the monitor. */
     private CClient cMonitor;
     /** Communication channels to the servers. */
-    private final HashMap<Integer, CClient> cServers;
+    private final Map<Integer, CClient> cServers;
     /** Communication channels to the clients. */
-    private final HashMap<Integer, CClient> cClients;
+    private final Map<Integer, CClient> cClients;
+    /** Requests waiting to be assigned to a server. */
+    private final Map<Integer, Message> waitingRequests;
     
     /**
      * Load Balancer Server instantiation.
@@ -36,21 +38,22 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
         this.cServer = new CServer(port);
         this.cServers = new HashMap<>();
         this.cClients = new HashMap<>();
-        initMonitorConnection(mHN, mPort, port);
+        this.waitingRequests = new HashMap<>();
+        initMonitorConnection(mHN, mPort);
     }
 
     /**
-     * Check if monitor is up, and send information about the load balancer server port.
+     * Check if monitor is up, and if so, establish the connection.
      * @param hostname monitor host name
      * @param mPort monitor port
-     * @param lbPort load balancer port
      */
-    private void initMonitorConnection(String hostname, int mPort, int lbPort){
+    private void initMonitorConnection(String hostname, int mPort){
         if(CClient.testConnection(hostname, mPort)){
             cMonitor = new CClient(hostname, mPort);
             cMonitor.connectToServer();
-            Message msg = new Message(MessageCodes.REG_INFOR, DefaultConfigs.HOSTNAME, lbPort);
+            Message msg = new Message(MessageCodes.REG_LB_M);
             cMonitor.sendMessage(msg);
+            new ClientCommunicationsThread(cMonitor).start();
         }
     }
     
@@ -75,26 +78,36 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
     @Override
     public void run() {
         Socket socket;
+        CClient cc;
         cServer.openServer();
-        while((socket = cServer.awaitClient()) != null)
-            new SocketCommunicationsThread(socket).start();
+        while((socket = cServer.awaitClient()) != null){
+            cc = new CClient(socket);
+            new ClientCommunicationsThread(cc).start();
+        }
     }
 
     /**
      * New request received from a client.
+     * Send the request to the Monitor.
      * @param request request message received
      */
     @Override
     public synchronized void newRequest(Message request) {
-        //Envia mensagem ao monitor
-        //Aguarda receber informação sobre o estado de todos os servidores
-        int serverId = 1; //GetFreeServer()
-        cServers.get(serverId).sendMessage(request);
+        waitingRequests.put(request.getRequestId(), request);
+        cMonitor.sendMessage(request);
+        // ---------> ADD REQUEST TO GUI
     }
 
+    /**
+     * Reply message for a given request.
+     * Notify the monitor and send the reply message to the client.
+     * @param reply reply message
+     */
     @Override
     public synchronized void requestReply(Message reply) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        cMonitor.sendMessage(reply);
+        cClients.get(reply.getClientId()).sendMessage(reply);
+        // ---------> REMOVE REQUEST FROM GUI
     }
 
     @Override
@@ -102,55 +115,120 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Receive the counters of requests of the servers and assign a server to the request.
+     * After assigning a server to the request, sends that information to the monitor.
+     * @param requestId request id to assign to a server
+     * @param serversCounters servers counters
+     */
     @Override
-    public synchronized void serversInfo(HashMap<Integer, Integer> serversOccupation) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public synchronized void serversInfo(int requestId, Map<Integer, Integer> serversCounters) {
+        int serverToAssign = getFreestServer(serversCounters);
+        Message msg = waitingRequests.remove(requestId);
+        if(serverToAssign == -1){
+            msg.setMessageCode(MessageCodes.REJECTION);
+            cClients.get(msg.getClientId()).sendMessage(msg);
+            // ---------> REMOVE REQUEST FROM GUI
+        } else{
+            Message msgToMonitor = new Message(serverToAssign, MessageCodes.ASSIGNMENT, requestId);
+            cMonitor.sendMessage(msgToMonitor);
+            cServers.get(serverToAssign).sendMessage(msg);
+            // ---------> UPDATE GUI
+        }
+    }
+
+    /**
+     * Register a new client connected to the load balancer.
+     * @param clientId client id
+     * @param cc communication client
+     */
+    @Override
+    public synchronized void newClient(int clientId, CClient cc) {
+        cClients.put(clientId, cc);
+    }
+
+    /**
+     * Register a new server connected to the load balancer.
+     * @param serverId server id
+     * @param cc communication client
+     */
+    @Override
+    public synchronized void newServer(int serverId, CClient cc) {
+        cServers.put(serverId, cc);
+    }
+    
+    /**
+     * Register the monitor.
+     * @param cc communication client to the monitor
+     */
+    @Override
+    public synchronized void monitorUp(CClient cc) {
+        cMonitor = cc;
     }
 
     /**
      * Get the server handling less requests.
-     * @return server id
+     * @param serversCounters servers requests counters
+     * @return server id, or -1, if there is no server
      */
-    private int getFreeServer(){
-        return 0;
+    private int getFreestServer(Map<Integer, Integer> serversCounters){
+        int serverId = -1, minCounter = Integer.MAX_VALUE;
+        boolean isFirst = true;
+        for (Map.Entry<Integer, Integer> serverCounter : serversCounters.entrySet()) {
+            if(isFirst){
+                isFirst = false;
+                minCounter = serverCounter.getValue();
+                serverId = serverCounter.getKey();
+            } else if(serverCounter.getValue() < minCounter){
+                minCounter = serverCounter.getValue();
+                serverId = serverCounter.getKey();
+            }
+        }
+        return serverId;
     }
     
     /**
-     * Thread for handle the communications of a given socket.
+     * Thread for handle the communications of a given client.
      */
-    class SocketCommunicationsThread extends Thread{
+    class ClientCommunicationsThread extends Thread{
         
-        /** Socket connected to the client. */
-        private final Socket socket;
+        /** Communication client. */
+        private final CClient cc;
 
         /**
-         * Socket communication thread instantiation.
-         * @param socket socket connected to the client
+         * Client communication thread instantiation.
+         * @param cc communication client
          */
-        public SocketCommunicationsThread(Socket socket) {
-            this.socket = socket;
+        public ClientCommunicationsThread(CClient cc) {
+            this.cc = cc;
         }
 
         /**
-         * Socket communication thread life cycle.
+         * Client communication thread life cycle.
          */
         @Override
         public void run() {
-            CClient cc = new CClient(socket);
             Message msg;
             while((msg = cc.receiveMessage()) != null){
                 switch(msg.getMessageCode()){
                     case MessageCodes.REG_CLIENT:
-                        cClients.put(msg.getClientId(), cc);
+                        newClient(msg.getClientId(), cc);
                         break;
                     case MessageCodes.REG_SERVER:
-                        cServers.put(msg.getServerId(), cc);
+                        newServer(msg.getServerId(), cc);
                         break;
-                    case MessageCodes.REG_INFOR:
-                        cMonitor = cc;
+                    case MessageCodes.REG_LB_M:
+                        monitorUp(cc);
                         break;
                     case MessageCodes.REQUEST:
                         newRequest(msg);
+                        break;
+                    case MessageCodes.SERVERS_COUNTERS:
+                        serversInfo(msg.getRequestId(), msg.getServerCounters());
+                        break;
+                    case MessageCodes.REPLY:
+                    case MessageCodes.REJECTION:
+                        requestReply(msg);
                         break;
                     case MessageCodes.TEST_MESSAGE:
                         cc.closeConnection();

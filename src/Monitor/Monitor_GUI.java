@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Monitor;
 
 import java.awt.Color;
@@ -16,16 +12,25 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author omp
+ * Monitor graphical interface.
+ * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */
 public class Monitor_GUI extends javax.swing.JFrame {
 
+    /** Monitor Service. */
+    private final Monitor monitor;
+    
     /**
-     * Creates new form Monitor_GUI
+     * Creates new form Monitor_GUI.
+     * @param port monitor server port
+     * @param hostname load balancer host name
+     * @param lbPort load balancer port
+     * @param heartbeatThreshold heartbeat threshold
      */
     public Monitor_GUI(int port, String hostname, int lbPort, int heartbeatThreshold) {
         initComponents();
+        this.monitor = new Monitor(port, hostname, lbPort, heartbeatThreshold);
+        this.monitor.start();
     }
 
     /**
@@ -239,7 +244,8 @@ public class Monitor_GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEndActionPerformed
-        // TODO add your handling code here:
+        monitor.closeSockets();
+        System.exit(0);
     }//GEN-LAST:event_jButtonEndActionPerformed
 
     private void jButtonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackActionPerformed
