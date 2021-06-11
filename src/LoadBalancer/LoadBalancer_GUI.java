@@ -1,6 +1,9 @@
 
 package LoadBalancer;
 
+import javax.swing.table.DefaultTableModel;
+import Communication.Message;
+
 /**
  * Load Balancer graphical interface.
  * @author Rafael Sá (104552), Luís Laranjeira (81526)
@@ -33,6 +36,8 @@ public class LoadBalancer_GUI extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jButtonExit = new javax.swing.JButton();
+        jScrollPaneRequests = new javax.swing.JScrollPane();
+        jTableRequests = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -46,28 +51,41 @@ public class LoadBalancer_GUI extends javax.swing.JFrame {
             }
         });
 
+        jTableRequests.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Request", "Client", "Server", "Number of Iterations"
+            }
+        ));
+        jScrollPaneRequests.setViewportView(jTableRequests);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(138, 138, 138)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addGap(119, 119, 119)
                 .addComponent(jButtonExit)
                 .addGap(27, 27, 27))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPaneRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jButtonExit)))
-                .addContainerGap(238, Short.MAX_VALUE))
+                .addGap(19, 19, 19)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonExit)
+                    .addComponent(jLabel1))
+                .addGap(24, 24, 24)
+                .addComponent(jScrollPaneRequests, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -82,9 +100,17 @@ public class LoadBalancer_GUI extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_jButtonExitActionPerformed
 
+    private void addElemToRequestTable(Message request){
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableRequests.getModel();
+        model.addRow(new Object[]{"Request " + request.getRequestId(), "Client " + request.getClientId(), "Server " + request.getServerId(), request.getIterations()});
+    }
+    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonExit;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPaneRequests;
+    private javax.swing.JTable jTableRequests;
     // End of variables declaration//GEN-END:variables
 }
