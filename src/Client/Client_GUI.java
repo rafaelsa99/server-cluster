@@ -225,7 +225,7 @@ public class Client_GUI extends javax.swing.JFrame {
      * Add new pending request to GUI.
      * @param request new request
      */
-    private void addPendingRequest(Request request){
+    private synchronized void addPendingRequest(Request request){
         DefaultTableModel model;
         model = (DefaultTableModel) jTablePendingRequests.getModel();
         model.addRow(new Object[]{"Request " + request.getId(), request.getnIterations()});

@@ -3,6 +3,7 @@ package LoadBalancer;
 
 import javax.swing.table.DefaultTableModel;
 import Communication.Message;
+import javax.swing.SwingUtilities;
 
 /**
  * Load Balancer graphical interface.
@@ -21,7 +22,7 @@ public class LoadBalancer_GUI extends javax.swing.JFrame {
      */
     public LoadBalancer_GUI(int port, String hostname, int mPort) {
         initComponents();
-        this.loadBalancer = new LoadBalancer(port, hostname, mPort);
+        this.loadBalancer = new LoadBalancer(port, hostname, mPort, this);
         this.loadBalancer.start();
     }
 
@@ -100,10 +101,60 @@ public class LoadBalancer_GUI extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_jButtonExitActionPerformed
 
-    private void addElemToRequestTable(Message request){
+    /**
+     * Add a new request to the GUI.
+     * @param request new request
+     */
+    public synchronized void addElemToRequestTable(Message request){
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> {
+                addElemToRequestTable(request);
+            });
+            return;
+        }
         DefaultTableModel model;
         model = (DefaultTableModel) jTableRequests.getModel();
-        model.addRow(new Object[]{"Request " + request.getRequestId(), "Client " + request.getClientId(), "Server " + request.getServerId(), request.getIterations()});
+        model.addRow(new Object[]{"Request " + request.getRequestId(), "Client " + request.getClientId(), "Not Assigned", request.getIterations()});
+    }
+    
+    /**
+     * Remove a request from the GUI.
+     * @param request request to remove
+     */
+    public synchronized void removeRequestFromTable(Message request){
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> {
+                removeRequestFromTable(request);
+            });
+            return;
+        }
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableRequests.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (((String)model.getValueAt(i, 0)).equals("Request " + request.getRequestId())) {
+                model.removeRow(i);
+            }
+        }
+    }
+    
+    /**
+     * Set the server assigned to a given request on the GUI.
+     * @param msg message with the request id and server id
+     */
+    public synchronized void setRequestServer(Message msg){
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> {
+                setRequestServer(msg);
+            });
+            return;
+        }
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableRequests.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (((String)model.getValueAt(i, 0)).equals("Request " + msg.getRequestId())) {
+                model.setValueAt("Server " + msg.getServerId(), i, 2);
+            }
+        }
     }
     
     

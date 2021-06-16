@@ -27,6 +27,8 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
     private final Map<Integer, CClient> cClients;
     /** Requests waiting to be assigned to a server. */
     private final Map<Integer, Message> waitingRequests;
+    /** Load Balancer GUI. */
+    private final LoadBalancer_GUI lbGUI;
     
     /**
      * Load Balancer Server instantiation.
@@ -34,12 +36,13 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
      * @param mHN monitor host name
      * @param mPort monitor port
      */
-    public LoadBalancer(int port, String mHN, int mPort) {
+    public LoadBalancer(int port, String mHN, int mPort, LoadBalancer_GUI lbGUI) {
         super("Load Balancer");
         this.cServer = new CServer(port);
         this.cServers = new HashMap<>();
         this.cClients = new HashMap<>();
         this.waitingRequests = new HashMap<>();
+        this.lbGUI = lbGUI;
         initMonitorConnection(mHN, mPort);
     }
 
@@ -96,7 +99,7 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
     public synchronized void newRequest(Message request) {
         waitingRequests.put(request.getRequestId(), request);
         cMonitor.sendMessage(request);
-        // ---------> ADD REQUEST TO GUI
+        lbGUI.addElemToRequestTable(request);
     }
 
     /**
@@ -108,7 +111,7 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
     public synchronized void requestReply(Message reply) {
         cMonitor.sendMessage(reply);
         cClients.get(reply.getClientId()).sendMessage(reply);
-        // ---------> REMOVE REQUEST FROM GUI
+        lbGUI.removeRequestFromTable(reply);
     }
 
     @Override
@@ -129,12 +132,12 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
         if(serverToAssign == -1){
             msg.setMessageCode(MessageCodes.REJECTION);
             cClients.get(msg.getClientId()).sendMessage(msg);
-            // ---------> REMOVE REQUEST FROM GUI
+            lbGUI.removeRequestFromTable(msg);
         } else{
             Message msgToMonitor = new Message(serverToAssign, MessageCodes.ASSIGNMENT, requestId);
             cMonitor.sendMessage(msgToMonitor);
             cServers.get(serverToAssign).sendMessage(msg);
-            // ---------> UPDATE GUI
+            lbGUI.setRequestServer(msgToMonitor);
         }
     }
 
