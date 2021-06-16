@@ -332,8 +332,10 @@ public class ServerConfiguration extends javax.swing.JFrame {
         
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {            
-            if(args.length != 1)
+            if(args.length != 1){
                 System.out.println("Parameters: serverID");
+                System.exit(1);
+            }
             int serverID = 0;
             try{
                 serverID = Integer.parseInt(args[0]);

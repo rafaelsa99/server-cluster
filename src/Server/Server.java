@@ -118,7 +118,9 @@ public class Server extends Thread{
                 try {
                     Thread.sleep(iterationTimeout);
                 } catch (InterruptedException ex) {}
-                char ch = NA_DECIMAL_PLACES.charAt(i - 1);
+                char ch = '0';
+                if(i <= 8)
+                    ch = NA_DECIMAL_PLACES.charAt(i - 1);
                 reply = addChar(reply, ch, i + 1);
             }
             request.setServerId(serverId);

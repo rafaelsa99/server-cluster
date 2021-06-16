@@ -2,6 +2,8 @@
 package Common;
 
 import Communication.Message;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -25,18 +27,12 @@ public class FIFO implements IFIFO{
     private final int queueSize;
     /** Maximum number of simultaneous requests. */
     private final int maxRequests;
-    /** Array for the queue of requests. */
-    private final Message queue[];
+    /** List of requests in queue. */
+    private final List<Message> queue;
     /** Next writing position on FIFO. */
     private int idxIn;
     /** Next reading position on FIFO. */
     private int idxOut;
-    /** Next writing position for Requests. */
-    private int idxReqIn;
-    /** Next reading position for Requests. */
-    private int idxReqOut;
-    /** Requests Counter. */
-    private int reqCounter;
     /** Thread Counter. */
     private int counter;
 
@@ -57,12 +53,9 @@ public class FIFO implements IFIFO{
             cStay[i] = rl.newCondition();
             leave[i] = false;
         }
-        queue = new Message[queueSize];
+        this.queue = new ArrayList<>();
         idxIn = 0;
         idxOut = 0;
-        idxReqIn = 0;
-        idxReqOut = 0;
-        reqCounter = 0;
         counter = 0;
     }
 
@@ -81,15 +74,15 @@ public class FIFO implements IFIFO{
             int idx = idxIn;
             idxIn = (++idxIn) % maxRequests;
             counter++;
-            if(reqCounter == 0){
-                while(!leave[idx])
+            System.out.println(queue.isEmpty());
+            if(queue.isEmpty()){
+                while(!leave[idx] || queue.isEmpty())
                     cStay[idx].await();
             }
-            int idxReq = idxReqOut;
-            idxReqOut = (++idxReqOut) % queueSize; 
             leave[idx] = false;
-            msg = queue[idxReq];
-            reqCounter--;
+            System.out.println("before remove: " + queue.size());
+            msg = queue.remove(0);
+            System.out.println("after remove: " + queue.size());
             cLeaving.signal();
         } catch (InterruptedException ex) {
             System.out.println(ex.toString());
@@ -108,12 +101,13 @@ public class FIFO implements IFIFO{
     public boolean out(Message request) {
         try{
             rl.lock();
-            if(reqCounter == queueSize)
+            System.out.println("reqCounter->" + queue.size());
+            if(queue.size() == queueSize){
+                System.out.println("return false");
                 return false;
-            int idxReq = idxReqIn;
-            idxReqIn = (++idxReqIn) % queueSize;
-            queue[idxReq] = request;
-            reqCounter++;
+            }
+            queue.add(request);
+            System.out.println("reqCounter after add->" + queue.size());
             if(counter > 0){
                 int idx = idxOut;
                 idxOut = (++idxOut) % maxRequests; 
@@ -121,6 +115,7 @@ public class FIFO implements IFIFO{
                 cStay[ idx ].signal();
                 while(leave[idx] == true)
                     cLeaving.await();
+                counter--;
             }
         } catch (InterruptedException ex) {
             System.out.println(ex.toString());
