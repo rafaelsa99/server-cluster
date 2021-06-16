@@ -23,10 +23,10 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="243" max="-2" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace pref="270" max="32767" attributes="0"/>
               <Component id="jLabelTitle" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="287" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="260" max="-2" attributes="0"/>
           </Group>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Component id="jLayeredPaneServerRequests" alignment="1" max="32767" attributes="0"/>
@@ -96,11 +96,9 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jTabbedPane" pref="570" max="32767" attributes="0"/>
+                          <Component id="jTabbedPane" pref="578" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              <Component id="jButtonPreview" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                               <Component id="jButtonEnd" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -112,10 +110,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jButtonEnd" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButtonPreview" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="jButtonEnd" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jTabbedPane" pref="175" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
@@ -153,16 +148,20 @@
                     <Component class="javax.swing.JTable" name="jTableServer">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="3" rowCount="1">
+                          <Table columnCount="4" rowCount="0">
                             <Column editable="true" title="Server ID" type="java.lang.Object"/>
                             <Column editable="true" title="State" type="java.lang.Object"/>
-                            <Column editable="true" title="Requests" type="java.lang.Object">
-                              <Data value="Button"/>
-                            </Column>
+                            <Column editable="true" title="N&#xba; of Requests" type="java.lang.Object"/>
+                            <Column editable="true" title="Requests" type="java.lang.Object"/>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor" postCode="jTableServer.setName(&quot;Server&quot;);&#xa;jTableServer.setRowHeight(35);&#xa;jTableServer.addMouseListener(new JTableButtonMouseListener(jTableServer));">
                           <TableColumnModel selectionModel="1">
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
                             <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                               <Title/>
                               <Editor/>
@@ -207,15 +206,21 @@
                     <Component class="javax.swing.JTable" name="jTableLB">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="4" rowCount="0">
+                          <Table columnCount="5" rowCount="0">
                             <Column editable="true" title="Request" type="java.lang.Object"/>
                             <Column editable="true" title="Client" type="java.lang.Object"/>
                             <Column editable="true" title="Server" type="java.lang.Object"/>
                             <Column editable="true" title="N&#xba; of Iterations" type="java.lang.Object"/>
+                            <Column editable="true" title="Current Iteration" type="java.lang.Object"/>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                           <TableColumnModel selectionModel="0">
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
                             <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                               <Title/>
                               <Editor/>
@@ -247,14 +252,6 @@
                 </Container>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="jButtonPreview">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Preview"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonPreviewActionPerformed"/>
-              </Events>
-            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanelServer">
@@ -330,21 +327,15 @@
                 <Component class="javax.swing.JTable" name="jTableRequests">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="5" rowCount="0">
+                      <Table columnCount="4" rowCount="0">
                         <Column editable="true" title="Request" type="java.lang.Object"/>
                         <Column editable="true" title="Client" type="java.lang.Object"/>
-                        <Column editable="true" title="State" type="java.lang.Object"/>
                         <Column editable="true" title="N&#xba; of Iterations" type="java.lang.Object"/>
                         <Column editable="true" title="Current Iteration" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                       <TableColumnModel selectionModel="0">
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
                         <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                           <Title/>
                           <Editor/>

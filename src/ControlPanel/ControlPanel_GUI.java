@@ -11,16 +11,18 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
+ * Control Panel graphical interface.
  * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */
 public class ControlPanel_GUI extends javax.swing.JFrame {
 
+    /** Reentrant Lock. */
     private final ReentrantLock rl;
+    /** Control Service. */
     private final Control control;
     
     /**
-     * Creates new form ControlPanel_GUI
+     * Creates new form ControlPanel_GUI.
      */
     public ControlPanel_GUI() {
         initComponents();
@@ -174,6 +176,10 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Start Load Balancer button action.
+     * @param evt event
+     */
     private void jToggleButtonStartLoadBalancerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonStartLoadBalancerActionPerformed
         rl.lock();
         try{
@@ -189,6 +195,10 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jToggleButtonStartLoadBalancerActionPerformed
 
+    /**
+     * Start Monitor button action.
+     * @param evt event
+     */
     private void jToggleButtonStartMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonStartMonitorActionPerformed
         rl.lock();
         try{
@@ -204,6 +214,10 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jToggleButtonStartMonitorActionPerformed
 
+    /**
+     * New server button action.
+     * @param evt event
+     */
     private void jButtonNewServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewServerActionPerformed
         rl.lock();
         try{
@@ -215,6 +229,10 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButtonNewServerActionPerformed
 
+    /**
+     * New Client button action.
+     * @param evt event
+     */
     private void jButtonNewClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewClientActionPerformed
         rl.lock();
         try{
@@ -225,17 +243,28 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonNewClientActionPerformed
 
+    /**
+     * End button action.
+     * @param evt event
+     */
     private void jButtonEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEndActionPerformed
         System.exit(0);
     }//GEN-LAST:event_jButtonEndActionPerformed
     
-    
+    /**
+     * Add a server to the table.
+     * @param serverId server id
+     */
     private void addElemToServerTable(Integer serverId){
         DefaultTableModel model;
         model = (DefaultTableModel) jTableServers.getModel();
         model.addRow(new Object[]{"Server " + serverId, serverId});
     }
     
+    /**
+     * Remove a server from the table.
+     * @param serverId  server id
+     */
     private void removeElemFromServerTable(Integer serverId){
         DefaultTableModel model;
         model = (DefaultTableModel) jTableServers.getModel();
@@ -246,12 +275,20 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Add a client to the table.
+     * @param clientId client id
+     */
     private void addElemToClientTable(Integer clientId){
         DefaultTableModel model;
         model = (DefaultTableModel) jTableClients.getModel();
         model.addRow(new Object[]{"Client " + clientId, clientId});
     }
     
+    /**
+     * Remove a client from the table.
+     * @param clientId client id
+     */
     private void removeElemFromClientTable(Integer clientId){
         DefaultTableModel model;
         model = (DefaultTableModel) jTableClients.getModel();
@@ -262,17 +299,25 @@ public class ControlPanel_GUI extends javax.swing.JFrame {
         }
     }
         
+    /**
+     * Button to shutdown a given server action.
+     * @param object server id
+     */
     private void jButtonShutdownServerActionPerformed(Integer object) {                                           
         control.shutdownServer(object);
         removeElemFromServerTable(object);
     }
     
+    /**
+     * Button to shutdown a given client action.
+     * @param object client id
+     */
     private void jButtonShutdownClientActionPerformed(Integer object) {                                           
         control.shutdownClient(object);
         removeElemFromClientTable(object);
     } 
-        /**
-    * Custom List Item Renderer
+    /**
+    * Custom List Item Renderer.
     */
     class TableButtonRenderer extends DefaultTableCellRenderer {
         private static final long serialVersionUID = -7799441088157759804L;

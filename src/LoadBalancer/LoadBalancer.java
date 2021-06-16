@@ -35,6 +35,7 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
      * @param port server socket port
      * @param mHN monitor host name
      * @param mPort monitor port
+     * @param lbGUI reference to the Load Balancer GUI
      */
     public LoadBalancer(int port, String mHN, int mPort, LoadBalancer_GUI lbGUI) {
         super("Load Balancer");

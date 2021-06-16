@@ -40,9 +40,9 @@ public interface I_Monitor {
     public void requestAssigned(int requestId, int serverId);
     /**
      * Update the current iteration of a request being processed by a server.
-     * @param serverId server id
      * @param requestId request id
      * @param currentIter current iteration
+     * @param serverId server id
      */
-    public void serverIterationsUpdate(int serverId, int requestId, int currentIter);
+    public void serverIterationsUpdate(int requestId, int currentIter, int serverId);
 }

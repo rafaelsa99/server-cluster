@@ -3,7 +3,9 @@ package Monitor;
 
 import Communication.CClient;
 import Communication.Message;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,6 +19,8 @@ public class ServerInfo {
     private final CClient cClient;
     /** List of messages being processed by the server. */
     private final Map<Integer, Message> requests;
+    /** Current iteration of requests. */
+    private final Map<Integer, String> currentState;
     /** Server state. */
     private boolean isActive;
     
@@ -29,6 +33,7 @@ public class ServerInfo {
         this.serverId = serverId;
         this.cClient = cClient;
         this.requests = new HashMap<>();
+        this.currentState = new HashMap<>();
         this.isActive = true;
     }
     
@@ -38,6 +43,7 @@ public class ServerInfo {
      */
     public void addRequest(Message request){
         requests.put(request.getRequestId(), request);
+        currentState.put(request.getRequestId(), "In Queue");
     }
     
     /**
@@ -46,6 +52,7 @@ public class ServerInfo {
      */
     public void removeRequest(int requestId){
         requests.remove(requestId);
+        currentState.remove(requestId);
     }
     
     /**
@@ -57,9 +64,26 @@ public class ServerInfo {
     }
     
     /**
+     * Set request current state.
+     * @param requestId request id
+     * @param cs current state
+     */
+    public void setCurrentState(int requestId, String cs){
+        this.currentState.replace(requestId, cs);
+    }
+    
+    /**
      * Close the communication channel.
      */
     public void closeConnection(){
         cClient.closeConnection();
+    }
+    
+    public List<Message> getRequests(){
+        return new ArrayList<>(requests.values());
+    }
+    
+    public Map<Integer, String> getCurrentState(){
+        return currentState;
     }
 }

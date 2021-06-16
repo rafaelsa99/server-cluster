@@ -102,6 +102,7 @@ public class CClient {
      */
     public synchronized boolean sendMessage(Object obj){
         try{
+            out.reset();
             out.writeObject(obj);
         } catch (IOException e) {
             System.out.println(e.toString());

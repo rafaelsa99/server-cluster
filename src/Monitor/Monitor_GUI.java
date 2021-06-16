@@ -1,13 +1,15 @@
 
 package Monitor;
 
-import java.awt.Color;
+import Communication.Message;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
+import java.util.Map;
 import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -29,7 +31,7 @@ public class Monitor_GUI extends javax.swing.JFrame {
      */
     public Monitor_GUI(int port, String hostname, int lbPort, int heartbeatThreshold) {
         initComponents();
-        this.monitor = new Monitor(port, hostname, lbPort, heartbeatThreshold);
+        this.monitor = new Monitor(port, hostname, lbPort, heartbeatThreshold, this);
         this.monitor.start();
     }
 
@@ -51,7 +53,6 @@ public class Monitor_GUI extends javax.swing.JFrame {
         jTableServer = new javax.swing.JTable();
         jScrollPaneLB = new javax.swing.JScrollPane();
         jTableLB = new javax.swing.JTable();
-        jButtonPreview = new javax.swing.JButton();
         jPanelServer = new javax.swing.JPanel();
         jButtonBack = new javax.swing.JButton();
         jLabelTitleServer = new javax.swing.JLabel();
@@ -74,10 +75,10 @@ public class Monitor_GUI extends javax.swing.JFrame {
 
         jTableServer.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, "Button"}
+
             },
             new String [] {
-                "Server ID", "State", "Requests"
+                "Server ID", "State", "Nº of Requests", "Requests"
             }
         ));
         jTableServer.setColumnSelectionAllowed(true);
@@ -89,7 +90,7 @@ public class Monitor_GUI extends javax.swing.JFrame {
         jScrollPaneServer.setViewportView(jTableServer);
         jTableServer.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (jTableServer.getColumnModel().getColumnCount() > 0) {
-            jTableServer.getColumnModel().getColumn(2).setCellRenderer(new TableButtonRenderer());
+            jTableServer.getColumnModel().getColumn(3).setCellRenderer(new TableButtonRenderer());
         }
         jTableServer.setName("Server");
         jTableServer.setRowHeight(35);
@@ -102,19 +103,12 @@ public class Monitor_GUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Request", "Client", "Server", "Nº of Iterations"
+                "Request", "Client", "Server", "Nº of Iterations", "Current Iteration"
             }
         ));
         jScrollPaneLB.setViewportView(jTableLB);
 
         jTabbedPane.addTab("Load Balancer", jScrollPaneLB);
-
-        jButtonPreview.setText("Preview");
-        jButtonPreview.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonPreviewActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanelBaseLayout = new javax.swing.GroupLayout(jPanelBase);
         jPanelBase.setLayout(jPanelBaseLayout);
@@ -123,11 +117,9 @@ public class Monitor_GUI extends javax.swing.JFrame {
             .addGroup(jPanelBaseLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelBaseLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButtonPreview)
-                        .addGap(32, 32, 32)
                         .addComponent(jButtonEnd)))
                 .addContainerGap())
         );
@@ -135,9 +127,7 @@ public class Monitor_GUI extends javax.swing.JFrame {
             jPanelBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelBaseLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonEnd)
-                    .addComponent(jButtonPreview))
+                .addComponent(jButtonEnd)
                 .addGap(18, 18, 18)
                 .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
                 .addGap(8, 8, 8))
@@ -163,7 +153,7 @@ public class Monitor_GUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Request", "Client", "State", "Nº of Iterations", "Current Iteration"
+                "Request", "Client", "Nº of Iterations", "Current Iteration"
             }
         ));
         jScrollPaneRequests.setViewportView(jTableRequests);
@@ -223,10 +213,10 @@ public class Monitor_GUI extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(243, 243, 243)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(270, Short.MAX_VALUE)
                 .addComponent(jLabelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(287, Short.MAX_VALUE))
+                .addGap(260, 260, 260))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jLayeredPaneServerRequests, javax.swing.GroupLayout.Alignment.TRAILING))
         );
@@ -243,42 +233,43 @@ public class Monitor_GUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * End button action.
+     * @param evt event
+     */
     private void jButtonEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEndActionPerformed
         monitor.closeSockets();
         System.exit(0);
     }//GEN-LAST:event_jButtonEndActionPerformed
 
+    /**
+     * Back button event.
+     * @param evt event
+     */
     private void jButtonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackActionPerformed
-        // TODO add your handling code here:
         jLayeredPaneServerRequests.setLayer(jPanelBase, 2);
         jLayeredPaneServerRequests.setLayer(jPanelServer, 0);
         jLayeredPaneServerRequests.repaint();
     }//GEN-LAST:event_jButtonBackActionPerformed
 
     private void jTableServerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableServerMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTableServerMouseClicked
 
-    private void jButtonPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPreviewActionPerformed
-        
-        jLayeredPaneServerRequests.setLayer(jPanelServer, 2);
-        jLayeredPaneServerRequests.setLayer(jPanelBase, 0);
-        jLayeredPaneServerRequests.repaint();
-    }//GEN-LAST:event_jButtonPreviewActionPerformed
+    }//GEN-LAST:event_jTableServerMouseClicked
     
-    private void jTableStateMouseClicked(Object obj) {                                          
-        // TODO add your handling code here: 
-    }     
-    
+    /**
+     * View server requests button action.
+     * @param object server id
+     */
     private void jButtonServerInfoActionPerformed(Integer object) {                                           
         loadServerRequests(object);
+        jLabelTitleServer.setText("Server " + object + " Requests");
         jLayeredPaneServerRequests.setLayer(jPanelServer, 2);
         jLayeredPaneServerRequests.setLayer(jPanelBase, 0);
         jLayeredPaneServerRequests.repaint();
     } 
     
-        /**
-    * Custom List Item Renderer
+    /**
+    * Custom List Item Renderer.
     */
     class TableButtonRenderer extends DefaultTableCellRenderer {
         private static final long serialVersionUID = -7799441088157759804L;
@@ -313,33 +304,220 @@ public class Monitor_GUI extends javax.swing.JFrame {
       @Override public void mouseClicked(MouseEvent e) {
         int column = table.getColumnModel().getColumnIndexAtX(e.getX());
         int row = e.getY()/table.getRowHeight(); 
-
         if (row < table.getRowCount() && row >= 0 && column < table.getColumnCount() && column >= 0) {
-          Object value = table.getValueAt(row, column);
-            jButtonServerInfoActionPerformed((Integer)value);
+            String value = (String)table.getValueAt(row, 0);
+            String[] values = value.split("\\s+");
+            jButtonServerInfoActionPerformed(Integer.parseInt(values[1]));
         }
       }
     }
     
-    private void loadServerRequests(Integer id){
+    /**
+     * Load requests being handled by a server to the table.
+     * @param id server id
+     */
+    private synchronized void loadServerRequests(Integer id){
         DefaultTableModel model;
-        model = (DefaultTableModel) jTableServer.getModel();
+        model = (DefaultTableModel) jTableRequests.getModel();
         cleanTable(model);
-        //Append Server Info to Table
-        //model.addRow(new Object[]{"Request " + request.getId(), request.getnIterations()});
+        Map<Integer, String> currentStates = monitor.getCurrentStates(id);
+        for (Message request : monitor.getRequests(id)) {
+            model.addRow(new Object[]{"Request " + request.getRequestId(), "Client " + request.getClientId(), request.getIterations(), currentStates.get(request.getRequestId())});
+        }
     }
     
-    private void cleanTable(DefaultTableModel model){
+    /**
+     * Clean server requests table.
+     * @param model table model
+     */
+    private synchronized void cleanTable(DefaultTableModel model){
         for(int i = 0; i < model.getRowCount(); i++){
             model.removeRow(i);
         }
     }
-
+    
+    /**
+     * Remove request from requests table.
+     * @param requestId request id
+     */
+    public synchronized void removeRequestFromRequestTable(int requestId){
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> {
+                removeRequestFromRequestTable(requestId);
+            });
+            return;
+        }
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableRequests.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (((String)model.getValueAt(i, 0)).equals("Request " + requestId)) {
+                model.removeRow(i);
+            }
+        }
+    }
+    
+    /**
+     * Add a new server to the table.
+     * @param serverId server id
+     */
+    public synchronized void addServerToTable(int serverId){
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> {
+                addServerToTable(serverId);
+            });
+            return;
+        }
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableServer.getModel();
+        model.addRow(new Object[]{"Server " + serverId, "UP", 0});
+    }
+    
+    /**
+     * Set the number of requests that a server is handling.
+     * @param serverId server id
+     * @param numRequests number of requests
+     */
+    public synchronized void setNumRequestsServer(int serverId, int numRequests){
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> {
+                setNumRequestsServer(serverId, numRequests);
+            });
+            return;
+        } 
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableServer.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (((String)model.getValueAt(i, 0)).equals("Server " + serverId)) {
+                model.setValueAt(numRequests, i, 2);
+            }
+        }
+    }
+    
+    /**
+     * Add a new request to the load balancer table.
+     * @param request new request
+     */
+    public synchronized void addRequestToLBTable(Message request){
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> {
+                addRequestToLBTable(request);
+            });
+            return;
+        }
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableLB.getModel();
+        model.addRow(new Object[]{"Request " + request.getRequestId(), "Client " + request.getClientId(), "Not Assigned", request.getIterations(), "Pending"});
+    }
+    
+    /**
+     * Remove a request from a load balancer table.
+     * @param requestId id of the request to remove
+     */
+    public synchronized void removeRequestFromLBTable(int requestId){
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> {
+                removeRequestFromLBTable(requestId);
+            });
+            return;
+        }
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableLB.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (((String)model.getValueAt(i, 0)).equals("Request " + requestId)) {
+                model.removeRow(i);
+            }
+        }
+    }
+    
+    /**
+     * Set the server assigned to a given request on the GUI.
+     * @param requestId request id
+     * @param serverId server id
+     */
+    public synchronized void setRequestServer(int requestId, int serverId){
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> {
+                setRequestServer(requestId, serverId);
+            });
+            return;
+        }
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableLB.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (((String)model.getValueAt(i, 0)).equals("Request " + requestId)) {
+                model.setValueAt("Server " + serverId, i, 2);
+                model.setValueAt("In Queue", i, 4);
+            }
+        }
+    }
+    
+    /**
+     * Set the current iteration on a request being processed on the load balancer table.
+     * @param requestId request id
+     * @param iteration current iteration of a request
+     */
+    public synchronized void setCurrentIterationsRequestLBTable(int requestId, int iteration){
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> {
+                setCurrentIterationsRequestLBTable(requestId, iteration);
+            });
+            return;
+        }
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableLB.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (((String)model.getValueAt(i, 0)).equals("Request " + requestId)) {
+                model.setValueAt(iteration, i, 4);
+            }
+        }
+    }
+    
+    /**
+     * Set the current iteration on a request being processed on the requests table.
+     * @param requestId request id
+     * @param iteration current iteration of a request
+     */
+    public synchronized void setCurrentIterationsRequestTable(int requestId, int iteration){
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> {
+                setCurrentIterationsRequestTable(requestId, iteration);
+            });
+            return;
+        }
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableRequests.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (((String)model.getValueAt(i, 0)).equals("Request " + requestId)) {
+                model.setValueAt(iteration, i, 3);
+            }
+        }
+    }
+    
+    /**
+     * Add a new to the request table, if the server requests is being shown.
+     * @param requestId request id
+     * @param clientId client id
+     * @param iterations number of iterations
+     * @param current current state of the request
+     * @param serverId server id
+     */
+    public synchronized void addRequestToTableRequest(int requestId, int clientId, int iterations, String current, int serverId){
+         if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> {
+                addRequestToTableRequest(requestId, clientId, iterations, current, serverId);
+            });
+            return;
+        }
+        if(jLabelTitleServer.getText().equals("Server " + serverId + " Requests")){
+            DefaultTableModel model;
+            model = (DefaultTableModel) jTableRequests.getModel();
+            model.addRow(new Object[]{"Request " + requestId, "Client " + clientId, iterations, current});
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBack;
     private javax.swing.JButton jButtonEnd;
-    private javax.swing.JButton jButtonPreview;
     private javax.swing.JLabel jLabelTitle;
     private javax.swing.JLabel jLabelTitleServer;
     private javax.swing.JLayeredPane jLayeredPaneServerRequests;

@@ -8,6 +8,7 @@ import Communication.MessageCodes;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,6 +30,8 @@ public class Monitor extends Thread implements I_Monitor{
     private final Map<Integer, ServerCounter> serversCounters;
     /** Requests waiting to be assigned to a server. */
     private final Map<Integer, Message> waitingRequests;
+    /** Monitor GUI. */
+    private final Monitor_GUI monitorGUI;
 
     /**
      * Monitor instantiation.
@@ -37,7 +40,7 @@ public class Monitor extends Thread implements I_Monitor{
      * @param lbPort load balancer port
      * @param heartbeatThreshold heartbeat threshold
      */
-    public Monitor(int port, String hostname, int lbPort, int heartbeatThreshold) {
+    public Monitor(int port, String hostname, int lbPort, int heartbeatThreshold, Monitor_GUI mGUI) {
         super("Monitor");
         this.heartbeatThreshold = heartbeatThreshold;
         this.cServer = new CServer(port);
@@ -45,6 +48,7 @@ public class Monitor extends Thread implements I_Monitor{
         this.servers = new HashMap<>();
         this.serversCounters = new HashMap<>();
         this.waitingRequests = new HashMap<>();
+        this.monitorGUI = mGUI;
     }
     
     /**
@@ -74,6 +78,24 @@ public class Monitor extends Thread implements I_Monitor{
     }
 
     /**
+     * Get requests of a server.
+     * @param serverId server id
+     * @return list of requests
+     */
+    public synchronized List<Message> getRequests(int serverId){
+        return new ArrayList<>(servers.get(serverId).getRequests());
+    }
+    
+    /**
+     * Get current states of the requests of a server.
+     * @param serverId server id
+     * @return current state of the requests
+     */
+    public synchronized Map<Integer, String> getCurrentStates(int serverId){
+        return servers.get(serverId).getCurrentState();
+    }
+    
+    /**
      * Life cycle of the server.
      * Await new clients while server socket is open.
      */
@@ -100,7 +122,7 @@ public class Monitor extends Thread implements I_Monitor{
      */
     @Override
     public synchronized void newLBRequest(Message request) {
-        //----------> UPDATE GUI
+        monitorGUI.addRequestToLBTable(request);
         waitingRequests.put(request.getRequestId(), request);
         Message msg = new Message(MessageCodes.SERVERS_COUNTERS, request.getRequestId(), new ArrayList<>(serversCounters.values()));
         cLB.sendMessage(msg);
@@ -114,18 +136,22 @@ public class Monitor extends Thread implements I_Monitor{
     public synchronized void newLBReply(Message reply) {
         serversCounters.get(reply.getServerId()).decrementCounter();
         servers.get(reply.getServerId()).removeRequest(reply.getRequestId());
-        //----------> UPDATE GUI
+        monitorGUI.setNumRequestsServer(reply.getServerId(), serversCounters.get(reply.getServerId()).getCounter());
+        monitorGUI.removeRequestFromLBTable(reply.getRequestId());
+        monitorGUI.removeRequestFromRequestTable(reply.getRequestId());
     }
 
     /**
      * Update the current iteration of a request being processed by a server.
-     * @param serverId server id
      * @param requestId request id
      * @param currentIter current iteration
+     * @param serverId server id
      */
     @Override
-    public synchronized void serverIterationsUpdate(int serverId, int requestId, int currentIter) {
-        //----------> UPDATE GUI
+    public synchronized void serverIterationsUpdate(int requestId, int currentIter, int serverId) {
+        servers.get(serverId).setCurrentState(requestId, Integer.toString(currentIter));
+        monitorGUI.setCurrentIterationsRequestLBTable(requestId, currentIter);
+        monitorGUI.setCurrentIterationsRequestTable(requestId, currentIter);
     }
 
     /**
@@ -138,7 +164,9 @@ public class Monitor extends Thread implements I_Monitor{
         Message request = waitingRequests.remove(requestId);
         servers.get(serverId).addRequest(request);
         serversCounters.get(serverId).incrementCounter();
-        //----------> UPDATE GUI
+        monitorGUI.setRequestServer(requestId, serverId);
+        monitorGUI.setNumRequestsServer(serverId, serversCounters.get(serverId).getCounter());
+        monitorGUI.addRequestToTableRequest(requestId, request.getClientId(), request.getIterations(), "In Queue", serverId);
     }
 
     /**
@@ -150,6 +178,7 @@ public class Monitor extends Thread implements I_Monitor{
     public synchronized void newServer(int serverId, CClient cc) {
         servers.put(serverId, new ServerInfo(serverId, cc));
         serversCounters.put(serverId, new ServerCounter(serverId, 0));
+        monitorGUI.addServerToTable(serverId);
     }
 
     /**
@@ -198,7 +227,7 @@ public class Monitor extends Thread implements I_Monitor{
                         requestAssigned(msg.getRequestId(), msg.getServerId());
                         break;
                     case MessageCodes.CUR_ITER:
-                        serverIterationsUpdate(msg.getServerId(), msg.getRequestId(), msg.getIterations());
+                        serverIterationsUpdate(msg.getRequestId(), msg.getIterations(), msg.getServerId());
                         break;
                     case MessageCodes.REPLY:
                     case MessageCodes.REJECTION:

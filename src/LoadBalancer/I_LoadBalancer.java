@@ -5,7 +5,6 @@ import Communication.CClient;
 import Communication.Message;
 import Monitor.ServerCounter;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Interface for the load balancer functions.
