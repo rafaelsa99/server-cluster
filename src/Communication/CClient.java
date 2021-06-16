@@ -114,7 +114,7 @@ public class CClient {
      * Receive a message.
      * @return message received
      */
-    public synchronized Message receiveMessage(){
+    public Message receiveMessage(){
         Message reply = null;
         try{
             reply = (Message)in.readObject();
