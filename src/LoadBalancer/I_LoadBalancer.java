@@ -3,6 +3,7 @@ package LoadBalancer;
 
 import Communication.CClient;
 import Communication.Message;
+import Monitor.ServerCounter;
 import java.util.List;
 import java.util.Map;
 
@@ -47,5 +48,5 @@ interface I_LoadBalancer {
      * @param requestId request id to assign to a server
      * @param serversCounters servers counters
      */
-     public void serversInfo(int requestId, Map<Integer, Integer> serversCounters);
+     public void serversInfo(int requestId, List<ServerCounter> serversCounters);
 }

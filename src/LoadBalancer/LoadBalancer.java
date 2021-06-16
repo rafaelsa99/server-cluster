@@ -5,6 +5,7 @@ import Communication.CClient;
 import Communication.CServer;
 import Communication.Message;
 import Communication.MessageCodes;
+import Monitor.ServerCounter;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
@@ -122,7 +123,7 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
      * @param serversCounters servers counters
      */
     @Override
-    public synchronized void serversInfo(int requestId, Map<Integer, Integer> serversCounters) {
+    public synchronized void serversInfo(int requestId, List<ServerCounter> serversCounters) {
         int serverToAssign = getFreestServer(serversCounters);
         Message msg = waitingRequests.remove(requestId);
         if(serverToAssign == -1){
@@ -171,17 +172,17 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
      * @param serversCounters servers requests counters
      * @return server id, or -1, if there is no server
      */
-    private int getFreestServer(Map<Integer, Integer> serversCounters){
+    private int getFreestServer(List<ServerCounter> serversCounters){
         int serverId = -1, minCounter = Integer.MAX_VALUE;
         boolean isFirst = true;
-        for (Map.Entry<Integer, Integer> serverCounter : serversCounters.entrySet()) {
+        for (ServerCounter serverCounter : serversCounters) {
             if(isFirst){
                 isFirst = false;
-                minCounter = serverCounter.getValue();
-                serverId = serverCounter.getKey();
-            } else if(serverCounter.getValue() < minCounter){
-                minCounter = serverCounter.getValue();
-                serverId = serverCounter.getKey();
+                minCounter = serverCounter.getCounter();
+                serverId = serverCounter.getServerId();
+            } else if(serverCounter.getCounter()< minCounter){
+                minCounter = serverCounter.getCounter();
+                serverId = serverCounter.getServerId();
             }
         }
         return serverId;

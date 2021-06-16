@@ -6,6 +6,7 @@ import Communication.CServer;
 import Communication.Message;
 import Communication.MessageCodes;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public class Monitor extends Thread implements I_Monitor{
     /** Servers Information. */
     private final Map<Integer, ServerInfo> servers;
     /** Servers Requests Counters. */
-    private final Map<Integer, Integer> serversCounters;
+    private final Map<Integer, ServerCounter> serversCounters;
     /** Requests waiting to be assigned to a server. */
     private final Map<Integer, Message> waitingRequests;
 
@@ -101,7 +102,7 @@ public class Monitor extends Thread implements I_Monitor{
     public synchronized void newLBRequest(Message request) {
         //----------> UPDATE GUI
         waitingRequests.put(request.getRequestId(), request);
-        Message msg = new Message(MessageCodes.SERVERS_COUNTERS, request.getRequestId(), serversCounters);
+        Message msg = new Message(MessageCodes.SERVERS_COUNTERS, request.getRequestId(), new ArrayList<>(serversCounters.values()));
         cLB.sendMessage(msg);
     }
 
@@ -111,7 +112,7 @@ public class Monitor extends Thread implements I_Monitor{
      */
     @Override
     public synchronized void newLBReply(Message reply) {
-        serversCounters.replace(reply.getServerId(), serversCounters.get(reply.getServerId()) + 1);
+        serversCounters.get(reply.getServerId()).decrementCounter();
         servers.get(reply.getServerId()).removeRequest(reply.getRequestId());
         //----------> UPDATE GUI
     }
@@ -136,7 +137,7 @@ public class Monitor extends Thread implements I_Monitor{
     public synchronized void requestAssigned(int requestId, int serverId) {
         Message request = waitingRequests.remove(requestId);
         servers.get(serverId).addRequest(request);
-        serversCounters.replace(serverId, serversCounters.get(serverId) + 1);
+        serversCounters.get(serverId).incrementCounter();
         //----------> UPDATE GUI
     }
 
@@ -148,7 +149,7 @@ public class Monitor extends Thread implements I_Monitor{
     @Override
     public synchronized void newServer(int serverId, CClient cc) {
         servers.put(serverId, new ServerInfo(serverId, cc));
-        serversCounters.put(serverId, 0);
+        serversCounters.put(serverId, new ServerCounter(serverId, 0));
     }
 
     /**

@@ -1,9 +1,10 @@
 
 package Communication;
 
+import Monitor.ServerCounter;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Serializable class representing the message to be sent between the processes.
@@ -26,7 +27,7 @@ public class Message implements Serializable{
     /** Requests being processed by a server. */
     private List<Message> serverRequests;
     /** Number of requests being processed by each server. */
-    private Map<Integer, Integer> serverCounters;
+    private List<ServerCounter> serverCounters;
 
     /**
      * Constructor for the request message / current iteration on a request update.
@@ -150,7 +151,7 @@ public class Message implements Serializable{
      * @param requestId request id
      * @param counters servers counters
      */
-    public Message(int messageCode, int requestId, Map<Integer, Integer> counters) {
+    public Message(int messageCode, int requestId, List<ServerCounter> counters) {
         this.messageCode = messageCode;
         this.clientId = 0;
         this.serverId = 0;
@@ -277,7 +278,7 @@ public class Message implements Serializable{
      * Get the number of requests being processed by the servers.
      * @return map with the serverIds - Counters
      */
-    public Map<Integer, Integer> getServerCounters() {
+    public List<ServerCounter> getServerCounters() {
         return serverCounters;
     }
 
@@ -285,9 +286,7 @@ public class Message implements Serializable{
      * Set the number of requests being processed by the servers.
      * @param serverCounters map with the serverIds - Counters
      */
-    public void setServerCounters(Map<Integer, Integer> serverCounters) {
+    public void setServerCounters(List<ServerCounter> serverCounters) {
         this.serverCounters = serverCounters;
     }
-    
-    
 }
