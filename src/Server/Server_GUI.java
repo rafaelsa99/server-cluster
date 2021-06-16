@@ -4,6 +4,8 @@ package Server;
 import Communication.CClient;
 import Communication.Message;
 import Communication.MessageCodes;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * Server graphical interface.
@@ -126,6 +128,10 @@ public class Server_GUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * End button action.
+     * @param evt event
+     */
     private void jButtonEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEndActionPerformed
         server.closeComChannels();
         System.exit(0);
@@ -150,6 +156,66 @@ public class Server_GUI extends javax.swing.JFrame {
      */
     private void labelChange(){
         jLabelTitle.setText("Server " + this.serverId);
+    }
+    
+    /**
+     * Add a new request received to the GUI.
+     * @param request request received
+     */
+    public synchronized void addRequestReceived(Message request, String state){
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> {
+                addRequestReceived(request, state);
+            });
+            return;
+        }
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableReceived.getModel();
+        model.addRow(new Object[]{"Request " + request.getRequestId(), "Client " + request.getClientId(), request.getIterations(), state});
+    }
+    
+    /**
+     * Set the state of a given request.
+     * @param request request to update
+     * @param state state of the request
+     */
+    public synchronized void setRequestState(Message request, String state){
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> {
+                setRequestState(request, state);
+            });
+            return;
+        }
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableReceived.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (((String)model.getValueAt(i, 0)).equals("Request " + request.getRequestId())) {
+                model.setValueAt(state, i, 3);
+            }
+        }
+    }
+    /**
+     * Request Processed.
+     * Remove from received requests table and adds to the processed request.
+     * @param request request processed
+     * @param processingTime processing time
+     */
+    public synchronized void setRequestProcessed(Message request, String processingTime) {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> {
+                setRequestProcessed(request, processingTime);
+            });
+            return;
+        }
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableReceived.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (((String)model.getValueAt(i, 0)).equals("Request " + request.getRequestId())) {
+                model.removeRow(i);
+            }
+        }
+        model = (DefaultTableModel) jTableProcessed.getModel();
+        model.addRow(new Object[]{"Request " + request.getRequestId(), "Client " + request.getClientId(), request.getIterations(), processingTime});
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

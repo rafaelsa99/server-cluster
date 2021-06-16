@@ -20,7 +20,7 @@ public class Server extends Thread{
     private final CClient cLB;
     /** Communication Client to Monitor. */
     private final CClient cMonitor;
-    /** Client GUI. */
+    /** Server GUI. */
     private final Server_GUI serverGUI;
     /** Server ID. */
     private final int serverId;
@@ -70,6 +70,9 @@ public class Server extends Thread{
                msg.setServerId(serverId);
                msg.setMessageCode(MessageCodes.REJECTION);
                cLB.sendMessage(msg);
+               serverGUI.addRequestReceived(msg, "Rejected");
+            } else{
+                serverGUI.addRequestReceived(msg, "In Queue");
             }
         }
     }
@@ -110,11 +113,13 @@ public class Server extends Thread{
         private Message getReplyMessage(Message request){
             String reply = NA_BASIS;
             Message iterUpdate = new Message(false, serverId, request.getRequestId(), MessageCodes.CUR_ITER, 0);
+            long startTime = System.nanoTime();
             for (int i = 1; i <= request.getIterations(); i++) {
                 if(i == 1)
                     reply = addChar(reply, '.', i);
                 iterUpdate.setIterations(i);
                 cMonitor.sendMessage(iterUpdate);
+                serverGUI.setRequestState(request, "Iteration " + i);
                 try {
                     Thread.sleep(iterationTimeout);
                 } catch (InterruptedException ex) {}
@@ -123,9 +128,12 @@ public class Server extends Thread{
                     ch = NA_DECIMAL_PLACES.charAt(i - 1);
                 reply = addChar(reply, ch, i + 1);
             }
+            long endTime = System.nanoTime();
             request.setServerId(serverId);
             request.setMessageCode(MessageCodes.REPLY);
             request.setValueNa(reply);
+            double duration = Math.round(((double)(endTime - startTime) / 1000000000.0)*100.0)/100.0;
+            serverGUI.setRequestProcessed(request, duration + "s");
             return request;
         }
         

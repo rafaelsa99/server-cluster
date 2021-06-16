@@ -65,7 +65,7 @@ public class Client extends Thread{
                     request = new Request(msg.getRequestId(), msg.getIterations(), msg.getValueNa());
                     break;
                 case MessageCodes.REJECTION:
-                    request = new Request(msg.getRequestId(), msg.getIterations(), "REJECTED");
+                    request = new Request(msg.getRequestId(), msg.getIterations(), "Rejected");
                     break;
                 default:
                     return;
