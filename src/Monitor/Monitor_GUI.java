@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * Monitor graphical interface.
@@ -50,6 +51,7 @@ public class Monitor_GUI extends javax.swing.JFrame {
         jTableServer = new javax.swing.JTable();
         jScrollPaneLB = new javax.swing.JScrollPane();
         jTableLB = new javax.swing.JTable();
+        jButtonPreview = new javax.swing.JButton();
         jPanelServer = new javax.swing.JPanel();
         jButtonBack = new javax.swing.JButton();
         jLabelTitleServer = new javax.swing.JLabel();
@@ -86,6 +88,12 @@ public class Monitor_GUI extends javax.swing.JFrame {
         });
         jScrollPaneServer.setViewportView(jTableServer);
         jTableServer.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        if (jTableServer.getColumnModel().getColumnCount() > 0) {
+            jTableServer.getColumnModel().getColumn(2).setCellRenderer(new TableButtonRenderer());
+        }
+        jTableServer.setName("Server");
+        jTableServer.setRowHeight(35);
+        jTableServer.addMouseListener(new JTableButtonMouseListener(jTableServer));
 
         jTabbedPane.addTab("Server", jScrollPaneServer);
 
@@ -101,6 +109,13 @@ public class Monitor_GUI extends javax.swing.JFrame {
 
         jTabbedPane.addTab("Load Balancer", jScrollPaneLB);
 
+        jButtonPreview.setText("Preview");
+        jButtonPreview.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPreviewActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelBaseLayout = new javax.swing.GroupLayout(jPanelBase);
         jPanelBase.setLayout(jPanelBaseLayout);
         jPanelBaseLayout.setHorizontalGroup(
@@ -108,9 +123,11 @@ public class Monitor_GUI extends javax.swing.JFrame {
             .addGroup(jPanelBaseLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelBaseLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButtonPreview)
+                        .addGap(32, 32, 32)
                         .addComponent(jButtonEnd)))
                 .addContainerGap())
         );
@@ -118,11 +135,15 @@ public class Monitor_GUI extends javax.swing.JFrame {
             jPanelBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelBaseLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButtonEnd)
+                .addGroup(jPanelBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonEnd)
+                    .addComponent(jButtonPreview))
                 .addGap(18, 18, 18)
-                .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
                 .addGap(8, 8, 8))
         );
+
+        jPanelServer.setEnabled(false);
 
         jButtonBack.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButtonBack.setText("Back");
@@ -152,52 +173,50 @@ public class Monitor_GUI extends javax.swing.JFrame {
         jPanelServerLayout.setHorizontalGroup(
             jPanelServerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelServerLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanelServerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelServerLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jButtonBack)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanelServerLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPaneRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)))
+                    .addComponent(jScrollPaneRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelServerLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabelTitleServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(197, 197, 197))
+                .addGap(192, 192, 192))
         );
         jPanelServerLayout.setVerticalGroup(
             jPanelServerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelServerLayout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(jPanelServerLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonBack)
-                .addGap(13, 13, 13)
+                .addGap(4, 4, 4)
                 .addComponent(jLabelTitleServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPaneRequests, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPaneRequests, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
-        jLayeredPaneServerRequests.setLayer(jPanelBase, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPaneServerRequests.setLayer(jPanelBase, javax.swing.JLayeredPane.PALETTE_LAYER);
         jLayeredPaneServerRequests.setLayer(jPanelServer, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPaneServerRequestsLayout = new javax.swing.GroupLayout(jLayeredPaneServerRequests);
         jLayeredPaneServerRequests.setLayout(jLayeredPaneServerRequestsLayout);
         jLayeredPaneServerRequestsLayout.setHorizontalGroup(
             jLayeredPaneServerRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelServer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanelBase, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jLayeredPaneServerRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanelBase, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanelServer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jLayeredPaneServerRequestsLayout.setVerticalGroup(
             jLayeredPaneServerRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPaneServerRequestsLayout.createSequentialGroup()
-                .addGap(0, 43, Short.MAX_VALUE)
-                .addComponent(jPanelServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 62, Short.MAX_VALUE)
+                .addComponent(jPanelBase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jLayeredPaneServerRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPaneServerRequestsLayout.createSequentialGroup()
-                    .addGap(0, 47, Short.MAX_VALUE)
-                    .addComponent(jPanelBase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGap(0, 66, Short.MAX_VALUE)
+                    .addComponent(jPanelServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -207,7 +226,7 @@ public class Monitor_GUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(243, 243, 243)
                 .addComponent(jLabelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(267, Short.MAX_VALUE))
+                .addContainerGap(287, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jLayeredPaneServerRequests, javax.swing.GroupLayout.Alignment.TRAILING))
         );
@@ -231,27 +250,39 @@ public class Monitor_GUI extends javax.swing.JFrame {
 
     private void jButtonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackActionPerformed
         // TODO add your handling code here:
+        jLayeredPaneServerRequests.setLayer(jPanelBase, 2);
+        jLayeredPaneServerRequests.setLayer(jPanelServer, 0);
+        jLayeredPaneServerRequests.repaint();
     }//GEN-LAST:event_jButtonBackActionPerformed
 
     private void jTableServerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableServerMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_jTableServerMouseClicked
+
+    private void jButtonPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPreviewActionPerformed
+        
+        jLayeredPaneServerRequests.setLayer(jPanelServer, 2);
+        jLayeredPaneServerRequests.setLayer(jPanelBase, 0);
+        jLayeredPaneServerRequests.repaint();
+    }//GEN-LAST:event_jButtonPreviewActionPerformed
     
     private void jTableStateMouseClicked(Object obj) {                                          
-        // TODO add your handling code here:
+        // TODO add your handling code here: 
     }     
     
-    /**
+    private void jButtonServerInfoActionPerformed(Integer object) {                                           
+        loadServerRequests(object);
+        jLayeredPaneServerRequests.setLayer(jPanelServer, 2);
+        jLayeredPaneServerRequests.setLayer(jPanelBase, 0);
+        jLayeredPaneServerRequests.repaint();
+    } 
+    
+        /**
     * Custom List Item Renderer
     */
     class TableButtonRenderer extends DefaultTableCellRenderer {
         private static final long serialVersionUID = -7799441088157759804L;
-        //private JPanel panel;
         private JButton button;
-        private Color textSelectionColor = Color.BLACK;
-        private Color backgroundSelectionColor = Color.CYAN;
-        private Color textNonSelectionColor = Color.BLACK;
-        private Color backgroundNonSelectionColor = Color.WHITE;
 
         TableButtonRenderer() {
         }
@@ -264,29 +295,9 @@ public class Monitor_GUI extends javax.swing.JFrame {
                 boolean hasFocus,
                 int row,
                 int col) {
-
-            //panel = new JPanel(new FlowLayout(FlowLayout.CENTER,0,3));
             
             button = new JButton();
-            //button.setOpaque(true);
-            //JLabel input = (JLabel)value;
-            button.setText("State of Requests");
-                        
-            //panel.add(button);
-            //label.setHorizontalAlignment(JLabel.CENTER);
-            //label.setIcon(input.getIcon());
-            //label.setText(input.getText());
-            //label.setToolTipText(input.getToolTipText());
-
-            if (isSelected) {
-                //panel.setBackground(backgroundSelectionColor);
-                //panel.setForeground(textSelectionColor);
-                //panel.setBackground(backgroundSelectionColor);
-            } else {
-                //panel.setBackground(backgroundNonSelectionColor);
-                //panel.setForeground(textNonSelectionColor);
-            }
-            //value = button;          
+            button.setText("View Server Requests");        
             return button;
         }
         
@@ -301,30 +312,34 @@ public class Monitor_GUI extends javax.swing.JFrame {
 
       @Override public void mouseClicked(MouseEvent e) {
         int column = table.getColumnModel().getColumnIndexAtX(e.getX());
-        int row    = e.getY()/table.getRowHeight(); 
-        //System.out.println("Col :"+column + "row:"+row);
+        int row = e.getY()/table.getRowHeight(); 
 
         if (row < table.getRowCount() && row >= 0 && column < table.getColumnCount() && column >= 0) {
           Object value = table.getValueAt(row, column);
-          //System.out.println("Value :" + value.getClass().getName());
-          jTableStateMouseClicked((Integer)value);
+            jButtonServerInfoActionPerformed((Integer)value);
         }
       }
     }
     
+    private void loadServerRequests(Integer id){
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableServer.getModel();
+        cleanTable(model);
+        //Append Server Info to Table
+        //model.addRow(new Object[]{"Request " + request.getId(), request.getnIterations()});
+    }
     
-    
-    private void switchPanels(JPanel panel){
-        jLayeredPaneServerRequests.removeAll();
-        jLayeredPaneServerRequests.add(panel);
-        jLayeredPaneServerRequests.repaint();
-        jLayeredPaneServerRequests.revalidate();
+    private void cleanTable(DefaultTableModel model){
+        for(int i = 0; i < model.getRowCount(); i++){
+            model.removeRow(i);
+        }
     }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBack;
     private javax.swing.JButton jButtonEnd;
+    private javax.swing.JButton jButtonPreview;
     private javax.swing.JLabel jLabelTitle;
     private javax.swing.JLabel jLabelTitleServer;
     private javax.swing.JLayeredPane jLayeredPaneServerRequests;
