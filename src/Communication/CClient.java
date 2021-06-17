@@ -36,15 +36,10 @@ public class CClient {
      * CClient instantiation.
      * @param socket socket to client
      */
-    public CClient(Socket socket){
+    public CClient(Socket socket) throws IOException{
         this.socket = socket;
-        try{
-            out = new ObjectOutputStream (this.socket.getOutputStream ());
-            in = new ObjectInputStream (this.socket.getInputStream ());
-        } catch(IOException e){
-            System.out.println("Couldn't get I/O for the connection to " + socket.getInetAddress().getHostName());
-            System.exit(1);
-        }
+        out = new ObjectOutputStream (this.socket.getOutputStream ());
+        in = new ObjectInputStream (this.socket.getInputStream ());
     }
     
     /**

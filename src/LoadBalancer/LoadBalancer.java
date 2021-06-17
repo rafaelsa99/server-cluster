@@ -6,6 +6,7 @@ import Communication.CServer;
 import Communication.Message;
 import Communication.MessageCodes;
 import Monitor.ServerCounter;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
@@ -86,8 +87,12 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
         CClient cc;
         cServer.openServer();
         while((socket = cServer.awaitClient()) != null){
-            cc = new CClient(socket);
-            new ClientCommunicationsThread(cc).start();
+            try {
+                cc = new CClient(socket);
+                new ClientCommunicationsThread(cc).start();
+            } catch (IOException ex) {
+                System.out.println(ex.toString());
+            }
         }
     }
 

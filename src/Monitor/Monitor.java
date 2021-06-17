@@ -5,6 +5,7 @@ import Communication.CClient;
 import Communication.CServer;
 import Communication.Message;
 import Communication.MessageCodes;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,8 +106,12 @@ public class Monitor extends Thread implements I_Monitor{
         CClient cc;
         cServer.openServer();
         while((socket = cServer.awaitClient()) != null){
-            cc = new CClient(socket);
-            new ClientCommunicationsThread(cc).start();
+            try {
+                cc = new CClient(socket);
+                new ClientCommunicationsThread(cc).start();
+            } catch (IOException ex) {
+                System.out.println(ex.toString());
+            }
         }
     }
 
