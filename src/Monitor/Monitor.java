@@ -31,6 +31,8 @@ public class Monitor extends Thread implements I_Monitor{
     private final Map<Integer, ServerCounter> serversCounters;
     /** Requests waiting to be assigned to a server. */
     private final Map<Integer, Message> waitingRequests;
+    /** Servers heartbeat threads. */
+    private final Map<Integer, ServerHeartbeatThread> heartbeatThreads;
     /** Monitor GUI. */
     private final Monitor_GUI monitorGUI;
 
@@ -40,6 +42,7 @@ public class Monitor extends Thread implements I_Monitor{
      * @param hostname load balancer host name
      * @param lbPort load balancer port
      * @param heartbeatThreshold heartbeat threshold
+     * @param mGUI monitor GUI reference
      */
     public Monitor(int port, String hostname, int lbPort, int heartbeatThreshold, Monitor_GUI mGUI) {
         super("Monitor");
@@ -50,6 +53,7 @@ public class Monitor extends Thread implements I_Monitor{
         this.serversCounters = new HashMap<>();
         this.waitingRequests = new HashMap<>();
         this.monitorGUI = mGUI;
+        this.heartbeatThreads = new HashMap<>();
     }
     
     /**
@@ -115,11 +119,34 @@ public class Monitor extends Thread implements I_Monitor{
         }
     }
 
+    /**
+     * Server down to update load balancer and GUI.
+     * @param serverId server id
+     */
     @Override
-    public synchronized void serverHeartbeat(int serverId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public synchronized void serverDown(int serverId) {
+        Message msg = new Message(MessageCodes.SERVER_DOWN, serverId);
+        msg.setServerRequests(servers.get(serverId).getRequests());
+        monitorGUI.setServerDown(serverId);
+        servers.get(serverId).getRequests().forEach(m -> {
+            monitorGUI.setNumRequestsServer(serverId, 0);
+            monitorGUI.removeRequestFromLBTable(m.getRequestId());
+            monitorGUI.removeRequestFromRequestTable(m.getRequestId());
+        });
+        servers.remove(serverId);
+        serversCounters.remove(serverId);
+        heartbeatThreads.remove(serverId);
+        cLB.sendMessage(msg);
     }
 
+    /**
+     * Server heartbeat.
+     * @param serverId server id
+     */
+    public synchronized void serverHeartbeat(int serverId){
+        heartbeatThreads.get(serverId).interrupt();
+    }
+    
     /**
      * New request received on Load Balancer.
      * Send the servers counters to the load balancer for the assignment decision.
@@ -146,6 +173,16 @@ public class Monitor extends Thread implements I_Monitor{
         monitorGUI.removeRequestFromRequestTable(reply.getRequestId());
     }
 
+    /**
+     * Message indicating that a request was rejected because there was no available servers.
+     * @param requestId request id
+     */
+    @Override
+    public synchronized void requestRejectionByNoServers(int requestId){
+        monitorGUI.removeRequestFromLBTable(requestId);
+        monitorGUI.removeRequestFromRequestTable(requestId);
+    }
+    
     /**
      * Update the current iteration of a request being processed by a server.
      * @param requestId request id
@@ -181,9 +218,11 @@ public class Monitor extends Thread implements I_Monitor{
      */
     @Override
     public synchronized void newServer(int serverId, CClient cc) {
-        servers.put(serverId, new ServerInfo(serverId, cc));
+        servers.put(serverId, new ServerInfo(cc));
         serversCounters.put(serverId, new ServerCounter(serverId, 0));
         monitorGUI.addServerToTable(serverId);
+        heartbeatThreads.put(serverId, new ServerHeartbeatThread(serverId));
+        heartbeatThreads.get(serverId).start();
     }
 
     /**
@@ -208,6 +247,7 @@ public class Monitor extends Thread implements I_Monitor{
          * @param cc communication client
          */
         public ClientCommunicationsThread(CClient cc) {
+            super("Communication Client Thread");
             this.cc = cc;
         }
 
@@ -238,11 +278,49 @@ public class Monitor extends Thread implements I_Monitor{
                     case MessageCodes.REJECTION:
                         newLBReply(msg);
                         break;
+                    case MessageCodes.HEARTBEAT:
+                        serverHeartbeat(msg.getServerId());
+                        break;
+                    case MessageCodes.REJECTION_NO_SERVERS:
+                        requestRejectionByNoServers(msg.getRequestId());
+                        break;
                     case MessageCodes.TEST_MESSAGE:
                         cc.closeConnection();
                         return;
                 }
             }
         }        
+    }
+    
+    /**
+     * Thread for handling the heartbeat control of a server.
+     */
+    class ServerHeartbeatThread extends Thread{
+
+        /** Server ID. */
+        private final int serverId;
+
+        /**
+         * Server heartbeat thread instantiation.
+         * @param serverId server id
+         */
+        public ServerHeartbeatThread(int serverId) {
+            super("Monitoring heartbeat of server " + serverId + " thread");
+            this.serverId = serverId;
+        }
+        
+        /**
+         * Server heartbeat thread life cycle.
+         */
+        @Override
+        public void run() {
+            while(true){
+                try {
+                    Thread.sleep(heartbeatThreshold);
+                    break;
+                } catch (InterruptedException ex) {}
+            }
+            serverDown(serverId);
+        }
     }
 }

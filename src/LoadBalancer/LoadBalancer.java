@@ -120,9 +120,19 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
         lbGUI.removeRequestFromTable(reply);
     }
 
+    /**
+     * Information that a server is down.
+     * Distribute the request again, one by one.
+     * @param serverId server id that is down
+     * @param messages requests that the server down was processing
+     */
     @Override
     public synchronized void serverDown(int serverId, List<Message> messages) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        cServers.remove(serverId);
+        messages.forEach(msg -> {
+            lbGUI.removeRequestFromTable(msg);
+            newRequest(msg);
+        });
     }
 
     /**
@@ -136,6 +146,8 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
         int serverToAssign = getFreestServer(serversCounters);
         Message msg = waitingRequests.remove(requestId);
         if(serverToAssign == -1){
+            msg.setMessageCode(MessageCodes.REJECTION_NO_SERVERS);
+            cMonitor.sendMessage(msg);
             msg.setMessageCode(MessageCodes.REJECTION);
             cClients.get(msg.getClientId()).sendMessage(msg);
             lbGUI.removeRequestFromTable(msg);
@@ -239,6 +251,9 @@ public class LoadBalancer extends Thread implements I_LoadBalancer{
                     case MessageCodes.REPLY:
                     case MessageCodes.REJECTION:
                         requestReply(msg);
+                        break;
+                    case MessageCodes.SERVER_DOWN:
+                        serverDown(msg.getServerId(), msg.getServerRequests());
                         break;
                     case MessageCodes.TEST_MESSAGE:
                         cc.closeConnection();

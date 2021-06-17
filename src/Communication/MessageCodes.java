@@ -55,6 +55,10 @@ public class MessageCodes {
      * Code for sending the counters of requests of the servers.
      */
     public static final int SERVERS_COUNTERS = 12;
+    /**
+     * Reply code for request rejection by no servers available.
+     */
+    public static final int REJECTION_NO_SERVERS = 13;
     
     /**
      * It can not be instantiated.

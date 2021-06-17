@@ -40,6 +40,12 @@ interface I_LoadBalancer {
      * @param reply reply message
      */
     public void requestReply(Message reply);
+    /**
+     * Information that a server is down.
+     * Distribute the request again, one by one.
+     * @param serverId server id that is down
+     * @param messages requests that the server down was processing
+     */
     public void serverDown(int serverId, List<Message> messages);
     /**
      * Receive the counters of requests of the servers and assign a server to the request.

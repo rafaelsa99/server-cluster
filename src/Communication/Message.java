@@ -162,6 +162,22 @@ public class Message implements Serializable{
         this.serverCounters = counters;
     }
     
+  /**
+     * Constructor for sending server down message.
+     * @param messageCode message code
+     * @param serverId server id
+     */
+    public Message(int messageCode, int serverId) {
+        this.messageCode = messageCode;
+        this.clientId = 0;
+        this.serverId = serverId;
+        this.requestId = 0;
+        this.iterations = 0;
+        this.valueNa = "0";
+        this.serverRequests = null;
+        this.serverCounters = null;
+    }
+    
     /**
      * Get client id.
      * @return client id

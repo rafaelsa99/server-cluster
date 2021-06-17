@@ -5,7 +5,6 @@ import Communication.Message;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JTable;
@@ -305,9 +304,11 @@ public class Monitor_GUI extends javax.swing.JFrame {
         int column = table.getColumnModel().getColumnIndexAtX(e.getX());
         int row = e.getY()/table.getRowHeight(); 
         if (row < table.getRowCount() && row >= 0 && column < table.getColumnCount() && column >= 0) {
-            String value = (String)table.getValueAt(row, 0);
-            String[] values = value.split("\\s+");
-            jButtonServerInfoActionPerformed(Integer.parseInt(values[1]));
+            if(((String)table.getValueAt(row, 1)).equals("UP")){
+                String value = (String)table.getValueAt(row, 0);
+                String[] values = value.split("\\s+");
+                jButtonServerInfoActionPerformed(Integer.parseInt(values[1]));
+            }
         }
       }
     }
@@ -370,6 +371,26 @@ public class Monitor_GUI extends javax.swing.JFrame {
         DefaultTableModel model;
         model = (DefaultTableModel) jTableServer.getModel();
         model.addRow(new Object[]{"Server " + serverId, "UP", 0});
+    }
+    
+    /**
+     * Set server down on GUI.
+     * @param serverId server id
+     */
+    public synchronized void setServerDown(int serverId){
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> {
+                setServerDown(serverId);
+            });
+            return;
+        }
+        DefaultTableModel model;
+        model = (DefaultTableModel) jTableServer.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (((String)model.getValueAt(i, 0)).equals("Server " + serverId)) {
+                model.setValueAt("DOWN", i, 1);
+            }
+        }
     }
     
     /**

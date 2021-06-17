@@ -20,6 +20,15 @@ public interface I_Monitor {
      * @param cc communication client to the load balancer
      */
     public void loadBalancerUp(CClient cc);
+    /**
+     * Server down to update load balancer and GUI.
+     * @param serverId server id
+     */
+    public void serverDown(int serverId);
+    /**
+     * Server heartbeat.
+     * @param serverId server id
+     */
     public void serverHeartbeat(int serverId);
     /**
      * New request received on Load Balancer.
@@ -45,4 +54,9 @@ public interface I_Monitor {
      * @param serverId server id
      */
     public void serverIterationsUpdate(int requestId, int currentIter, int serverId);
+    /**
+     * Message indicating that a request was rejected because there was no available servers.
+     * @param requestId request id
+     */
+    public void requestRejectionByNoServers(int requestId);
 }

@@ -13,28 +13,21 @@ import java.util.Map;
  * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */
 public class ServerInfo {
-    /** Server ID. */
-    private final int serverId;
     /** Communication Client to the server. */
     private final CClient cClient;
     /** List of messages being processed by the server. */
     private final Map<Integer, Message> requests;
     /** Current iteration of requests. */
     private final Map<Integer, String> currentState;
-    /** Server state. */
-    private boolean isActive;
     
     /**
      * Server info instantiation.
-     * @param serverId server ID
      * @param cClient communication client with the server
      */
-    public ServerInfo(int serverId, CClient cClient) {
-        this.serverId = serverId;
+    public ServerInfo(CClient cClient) {
         this.cClient = cClient;
         this.requests = new HashMap<>();
         this.currentState = new HashMap<>();
-        this.isActive = true;
     }
     
     /**
@@ -53,14 +46,6 @@ public class ServerInfo {
     public void removeRequest(int requestId){
         requests.remove(requestId);
         currentState.remove(requestId);
-    }
-    
-    /**
-     * Set the server state
-     * @param state true, if server is active, false otherwise
-     */
-    public void setState(boolean state){
-        this.isActive = state;
     }
     
     /**
