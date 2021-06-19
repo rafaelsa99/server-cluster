@@ -5,6 +5,8 @@ import Common.FIFO;
 import Communication.CClient;
 import Communication.Message;
 import Communication.MessageCodes;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Server to handle the requests.
@@ -28,6 +30,10 @@ public class Server extends Thread{
     private final int iterationTimeout;
     /** FIFO for the queue of requests. */
     private final FIFO fifo;
+    /** List of requests in queue. */
+    private final List<Message> queue;
+    /** Queue size. */
+    private final int queueSize;
 
     /**
      * Server thread instantiation.
@@ -42,11 +48,13 @@ public class Server extends Thread{
     public Server(CClient cLB, CClient cMonitor, Server_GUI serverGUI, int serverId, int iterationTimeout, int queueSize, int maxRequests) {
         super("Server " + serverId);
         this.cLB = cLB;
+        this.queueSize = queueSize;
         this.cMonitor = cMonitor;
         this.serverGUI = serverGUI;
         this.serverId = serverId;
         this.iterationTimeout = iterationTimeout;
         this.fifo = new FIFO(queueSize, maxRequests);
+        this.queue = new ArrayList<>();
         for (int i = 1; i <= maxRequests; i++) 
             new ProcessingThread(i).start();
     }
@@ -60,18 +68,46 @@ public class Server extends Thread{
     }
 
     /**
+     * Check if queue is full.
+     * @return true if queue is full, false otherwise.
+     */
+    public synchronized boolean queueIsFull(){
+        return queue.size() >= queueSize;
+    }
+    
+    /**
+     * Add a new request to the queue.
+     * @param request new request to add
+     */
+    public synchronized void addRequestToQueue(Message request){
+        queue.add(request);
+        fifo.out();
+    }
+    
+    /**
+     * Remove the first request in the queue
+     * @return request removed from the queue
+     */
+    public synchronized Message getNextRequestOnQueue(){
+        if(queue.size() > 0)
+            return queue.remove(0);
+        return null;
+    }
+    
+    /**
      * Server thread life cycle.
      */
     @Override
     public void run() {
         Message msg;
         while((msg = cLB.receiveMessage()) != null){
-            if(!fifo.out(msg)){
-               msg.setServerId(serverId);
-               msg.setMessageCode(MessageCodes.REJECTION);
-               cLB.sendMessage(msg);
-               serverGUI.addRequestReceived(msg, "Rejected");
-            } else{
+            if(queueIsFull()){
+                msg.setServerId(serverId);
+                msg.setMessageCode(MessageCodes.REJECTION);
+                cLB.sendMessage(msg);
+                serverGUI.addRequestReceived(msg, "Rejected");
+            } else {
+                addRequestToQueue(msg);
                 serverGUI.addRequestReceived(msg, "In Queue");
             }
         }
@@ -97,7 +133,8 @@ public class Server extends Thread{
         public void run() {
             Message msg;
             while(true) { //-------------> DEVE SER NOT END
-                msg = fifo.in();
+                fifo.in();
+                msg = getNextRequestOnQueue();
                 if(msg != null){
                     Message reply = getReplyMessage(msg);
                     cLB.sendMessage(reply);

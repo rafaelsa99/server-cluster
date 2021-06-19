@@ -259,9 +259,9 @@ public class Monitor_GUI extends javax.swing.JFrame {
      * View server requests button action.
      * @param object server id
      */
-    private void jButtonServerInfoActionPerformed(Integer object) {                                           
-        loadServerRequests(object);
+    private void jButtonServerInfoActionPerformed(Integer object) {    
         jLabelTitleServer.setText("Server " + object + " Requests");
+        loadServerRequests(object);
         jLayeredPaneServerRequests.setLayer(jPanelServer, 2);
         jLayeredPaneServerRequests.setLayer(jPanelBase, 0);
         jLayeredPaneServerRequests.repaint();
@@ -340,7 +340,7 @@ public class Monitor_GUI extends javax.swing.JFrame {
      * @param model table model
      */
     private synchronized void cleanTable(DefaultTableModel model){
-        for(int i = 0; i < model.getRowCount(); i++){
+        for(int i = model.getRowCount() - 1; i >= 0; i--){
             model.removeRow(i);
         }
     }
