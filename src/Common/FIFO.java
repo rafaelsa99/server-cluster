@@ -5,8 +5,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * FIFO to handle the server requests.
- * The processing threads enter the FIFO and wait for new requests.
+ * FIFO to handle the processing threads.
+ * They enter the FIFO and wait for new requests.
  * 
  * @author Rafael Sá (104552), Luís Laranjeira (81526)
  */

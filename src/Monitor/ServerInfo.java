@@ -64,10 +64,18 @@ public class ServerInfo {
         cClient.closeConnection();
     }
     
+    /**
+     * Get the requests of the server.
+     * @return list of requests
+     */
     public List<Message> getRequests(){
         return new ArrayList<>(requests.values());
     }
     
+    /**
+     * Get requests current states.
+     * @return requests current states
+     */
     public Map<Integer, String> getCurrentState(){
         return currentState;
     }

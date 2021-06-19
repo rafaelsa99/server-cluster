@@ -13,7 +13,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Server_GUI extends javax.swing.JFrame {
 
+    /** Server service. */
     private final Server server;
+    /** Server ID. */
     private final int serverId;
     
     /**

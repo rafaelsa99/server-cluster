@@ -31,10 +31,11 @@ public class CClient {
         this.hostName = hostName;
         this.portNumber = portNumber;
     }
-    
+
     /**
      * CClient instantiation.
      * @param socket socket to client
+     * @throws IOException if it was not possible to get I/0 for the connection
      */
     public CClient(Socket socket) throws IOException{
         this.socket = socket;
