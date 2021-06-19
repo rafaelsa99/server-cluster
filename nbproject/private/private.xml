@@ -5,17 +5,9 @@
         <group>
             <file>file:/C:/Users/rafas/OneDrive/Área%20de%20Trabalho/TP_AS/server-cluster/src/Server/Server.java</file>
             <file>file:/C:/Users/rafas/OneDrive/Área%20de%20Trabalho/TP_AS/server-cluster/src/Communication/CClient.java</file>
-            <file>file:/C:/Users/rafas/OneDrive/Área%20de%20Trabalho/TP_AS/server-cluster/src/Monitor/I_Monitor.java</file>
-            <file>file:/C:/Users/rafas/OneDrive/Área%20de%20Trabalho/TP_AS/server-cluster/src/Monitor/ServerInfo.java</file>
-            <file>file:/C:/Users/rafas/OneDrive/Área%20de%20Trabalho/TP_AS/server-cluster/src/LoadBalancer/I_LoadBalancer.java</file>
-            <file>file:/C:/Users/rafas/OneDrive/Área%20de%20Trabalho/TP_AS/server-cluster/src/Server/Server_GUI.java</file>
-            <file>file:/C:/Users/rafas/OneDrive/Área%20de%20Trabalho/TP_AS/server-cluster/src/Monitor/ServerCounter.java</file>
             <file>file:/C:/Users/rafas/OneDrive/Área%20de%20Trabalho/TP_AS/server-cluster/src/LoadBalancer/LoadBalancer.java</file>
-            <file>file:/C:/Users/rafas/OneDrive/Área%20de%20Trabalho/TP_AS/server-cluster/src/Communication/MessageCodes.java</file>
             <file>file:/C:/Users/rafas/OneDrive/Área%20de%20Trabalho/TP_AS/server-cluster/src/Monitor/Monitor.java</file>
-            <file>file:/C:/Users/rafas/OneDrive/Área%20de%20Trabalho/TP_AS/server-cluster/src/LoadBalancer/LoadBalancer_GUI.java</file>
-            <file>file:/C:/Users/rafas/OneDrive/Área%20de%20Trabalho/TP_AS/server-cluster/src/Server/Heartbeat.java</file>
-            <file>file:/C:/Users/rafas/OneDrive/Área%20de%20Trabalho/TP_AS/server-cluster/src/Communication/Message.java</file>
+            <file>file:/C:/Users/rafas/OneDrive/Área%20de%20Trabalho/TP_AS/server-cluster/src/Common/FIFO.java</file>
         </group>
     </open-files>
 </project-private>
