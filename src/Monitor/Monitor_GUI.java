@@ -322,8 +322,16 @@ public class Monitor_GUI extends javax.swing.JFrame {
         model = (DefaultTableModel) jTableRequests.getModel();
         cleanTable(model);
         Map<Integer, String> currentStates = monitor.getCurrentStates(id);
+        boolean exists;
         for (Message request : monitor.getRequests(id)) {
-            model.addRow(new Object[]{"Request " + request.getRequestId(), "Client " + request.getClientId(), request.getIterations(), currentStates.get(request.getRequestId())});
+            exists = false;
+            for (int i = 0; i < model.getRowCount(); i++) {
+                if (((String)model.getValueAt(i, 0)).equals("Request " + request.getRequestId())) {
+                    exists = true;
+                }
+            }
+            if(!exists)
+                model.addRow(new Object[]{"Request " + request.getRequestId(), "Client " + request.getClientId(), request.getIterations(), currentStates.get(request.getRequestId())});
         }
     }
     
@@ -532,7 +540,14 @@ public class Monitor_GUI extends javax.swing.JFrame {
         if(jLabelTitleServer.getText().equals("Server " + serverId + " Requests")){
             DefaultTableModel model;
             model = (DefaultTableModel) jTableRequests.getModel();
-            model.addRow(new Object[]{"Request " + requestId, "Client " + clientId, iterations, current});
+            boolean exists = false;
+            for (int i = 0; i < model.getRowCount(); i++) {
+                if (((String)model.getValueAt(i, 0)).equals("Request " + requestId)) {
+                    exists = true;
+                }
+            }
+            if(!exists)
+                model.addRow(new Object[]{"Request " + requestId, "Client " + clientId, iterations, current});
         }
     }
 
