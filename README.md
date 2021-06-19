@@ -118,3 +118,9 @@ Each GUI will be evaluated in order to check its state and the information it sh
   - Interface to show the pending requests (pending requests >=0)
   - Interface to show the executed requests
   - Be ambitious, improve the GUI of your clients
+
+## Execution
+To start the cluster, just run the Control Panel, and from there you can launch and manage all the entities in the cluster.
+```
+java -cp dist/PA3_G9.jar ControlPanel.ControlPanel_GUI
+```
