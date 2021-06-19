@@ -28,6 +28,8 @@ public class FIFO implements IFIFO{
     private int idxOut;
     /** Thread Counter. */
     private int counter;
+    /** End flag. */
+    private boolean end;
     
     /**
      * FIFO instantiation.
@@ -47,21 +49,24 @@ public class FIFO implements IFIFO{
         idxIn = 0;
         idxOut = 0;
         counter = 0;
+        end = false;
     }
 
     
     /**
      * Thread entry to FIFO.
+     * @return true if not end, false otherwise.
      */
     @Override
-    public void in() {
+    public boolean in() {
         try{
             rl.lock();
+            if(end) return false;
             int idx = idxIn;
             idxIn = (++idxIn) % maxRequests;
             counter++;
             while(!leave[idx])
-                    cStay[idx].await();
+                cStay[idx].await();
             counter--;
             leave[idx] = false;
             cLeaving.signal();
@@ -70,6 +75,7 @@ public class FIFO implements IFIFO{
         } finally{
             rl.unlock();
         }
+        return !end;
     }
 
     /**
@@ -79,6 +85,7 @@ public class FIFO implements IFIFO{
     public void out() {
         try{
             rl.lock();
+            if(end) return;
             int idx = idxOut;
             idxOut = (++idxOut) % maxRequests; 
             leave[ idx ] = true;
@@ -90,6 +97,23 @@ public class FIFO implements IFIFO{
         } catch (InterruptedException ex) {
             System.out.println(ex.toString());
         } finally{
+            rl.unlock();
+        }
+    }
+
+    /**
+     * Set end flag to true and remove all threads waiting on FIFO.
+     */
+    @Override
+    public void end() {
+        try{
+            rl.lock();
+            end = true;
+            for (int i = 0; i < maxRequests; i++) {
+                leave[ i ] = true;
+                cStay[ i ].signal(); 
+            }
+        } finally {
             rl.unlock();
         }
     }

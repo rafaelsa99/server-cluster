@@ -35,7 +35,9 @@ public class Monitor extends Thread implements I_Monitor{
     private final Map<Integer, ServerHeartbeatThread> heartbeatThreads;
     /** Monitor GUI. */
     private final Monitor_GUI monitorGUI;
-
+    /** End flag. */
+    private boolean end;
+    
     /**
      * Monitor instantiation.
      * @param port server socket port
@@ -54,6 +56,7 @@ public class Monitor extends Thread implements I_Monitor{
         this.waitingRequests = new HashMap<>();
         this.monitorGUI = mGUI;
         this.heartbeatThreads = new HashMap<>();
+        this.end = false;
     }
     
     /**
@@ -80,8 +83,25 @@ public class Monitor extends Thread implements I_Monitor{
         });
         if(cLB != null)
             cLB.closeConnection();
+        setEnd(true);
     }
 
+    /**
+     * Check if the end flag is true.
+     * @return true if is end, false otherwise.
+     */
+    public synchronized boolean isEnd() {
+        return end;
+    }
+
+    /**
+     * Set the end flag. 
+     * @param end value to the end flag
+     */
+    public synchronized void setEnd(boolean end) {
+        this.end = end;
+    }
+    
     /**
      * Get requests of a server.
      * @param serverId server id
@@ -315,13 +335,14 @@ public class Monitor extends Thread implements I_Monitor{
          */
         @Override
         public void run() {
-            while(true){
+            while(!isEnd()){
                 try {
                     Thread.sleep(heartbeatThreshold);
                     break;
                 } catch (InterruptedException ex) {}
             }
-            serverDown(serverId);
+            if(!isEnd())
+                serverDown(serverId);
         }
     }
 }

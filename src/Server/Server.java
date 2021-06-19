@@ -65,8 +65,9 @@ public class Server extends Thread{
     public void closeComChannels(){
         cLB.closeConnection();
         cMonitor.closeConnection();
+        fifo.end();
     }
-
+    
     /**
      * Check if queue is full.
      * @return true if queue is full, false otherwise.
@@ -132,8 +133,7 @@ public class Server extends Thread{
         @Override
         public void run() {
             Message msg;
-            while(true) { //-------------> DEVE SER NOT END
-                fifo.in();
+            while(fifo.in()) {
                 msg = getNextRequestOnQueue();
                 if(msg != null){
                     Message reply = getReplyMessage(msg);
