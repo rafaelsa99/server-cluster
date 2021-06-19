@@ -120,7 +120,28 @@ Each GUI will be evaluated in order to check its state and the information it sh
   - Be ambitious, improve the GUI of your clients
 
 ## Execution
-To start the cluster, just run the Control Panel, and from there you can launch and manage all the entities in the cluster.
+To start the cluster, just run the Control Panel, and from there you can launch and manage all the entities in the cluster. It is also possible to start each entity individually.
+### Control Panel
 ```
 java -cp dist/PA3_G9.jar ControlPanel.ControlPanel_GUI
+```
+### Load Balancer
+```
+java -cp dist/PA3_G9.jar Configurations.LBConfiguration
+```
+### Monitor
+```
+java -cp dist/PA3_G9.jar Configurations.MonitorConfiguration
+```
+### Server
+Parameters: 
+- serverID: integer that uniquely identifies the server.
+```
+java -cp dist/PA3_G9.jar Configurations.ServerConfiguration 1
+```
+### Client
+Parameters: 
+- clientID: integer that uniquely identifies the client.
+```
+java -cp dist/PA3_G9.jar Configurations.ClientConfiguration 1
 ```
